@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Shadow Hunters — Card Forge</title>
+<link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <div>
+      <h1>Shadow Hunters — Card Forge</h1>
+      <p class="sub">Design proxy cards &amp; export print-ready PDF sheets</p>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="create">Create</button>
+    <button class="tab" data-tab="collection">Collection <span id="countBadge" class="badge">0</span></button>
+    <button class="tab" data-tab="print">Print &amp; Export</button>
+  </nav>
+</header>
+
+<main>
+  <!-- ============ CREATE ============ -->
+  <section id="tab-create" class="tabpanel active">
+    <div class="editor-grid">
+      <div class="panel">
+        <h2>1. Card template</h2>
+        <div id="templatePicker" class="template-picker"></div>
+
+        <h2>2. Card content</h2>
+        <label class="field" id="fieldTitle">
+          <span>Nom de la carte <em>(l'initiale s'affiche dans le médaillon)</em></span>
+          <input id="fTitle" type="text" maxlength="40" placeholder="ex. Vampire" />
+        </label>
+
+        <label class="field" id="fieldHp">
+          <span>PV (points de vie)</span>
+          <input id="fHp" type="number" min="0" max="99" step="1" placeholder="11" />
+        </label>
+
+        <label class="field" id="fieldSpellKind">
+          <span>Type de carte</span>
+          <select id="fSpellKind">
+            <option value="immediate">À jouer immédiatement</option>
+            <option value="equipment">Équipement</option>
+          </select>
+        </label>
+
+        <label class="field" id="fieldVictory">
+          <span>Conditions de victoire</span>
+          <textarea id="fVictory" rows="2" maxlength="200" placeholder="ex. Vous êtes le premier joueur à..."></textarea>
+        </label>
+        <p id="victoryLocked" class="hint hidden">Texte imposé par le camp — modifiable uniquement sur les cartes Neutral.</p>
+
+        <label class="field" id="fieldAbilityName">
+          <span>Capacité spéciale — nom</span>
+          <input id="fAbilityName" type="text" maxlength="40" placeholder="ex. Morsure" />
+        </label>
+
+        <label class="field" id="fieldAbilityText">
+          <span>Capacité spéciale — description</span>
+          <textarea id="fAbilityText" rows="4" maxlength="500" placeholder="Décrivez l'effet de la capacité..."></textarea>
+        </label>
+
+        <div class="field" id="fieldVisionTypes">
+          <span>« Je pense que tu es… » <em>(1 ou 2 types)</em></span>
+          <div class="vision-row">
+            <select id="fVisionType1">
+              <option value="hunter">Hunter</option>
+              <option value="shadow">Shadow</option>
+              <option value="neutral">Neutre</option>
+            </select>
+            <span class="vision-join">ou</span>
+            <select id="fVisionType2">
+              <option value="">— aucun —</option>
+              <option value="hunter">Hunter</option>
+              <option value="shadow">Shadow</option>
+              <option value="neutral">Neutre</option>
+            </select>
+          </div>
+        </div>
+
+        <label class="field" id="fieldText">
+          <span>Texte de la carte</span>
+          <textarea id="fText" rows="5" maxlength="600" placeholder="Effet de la carte..."></textarea>
+        </label>
+
+        <h2>3. Artwork</h2>
+        <div class="art-controls">
+          <label class="filebtn">
+            <input id="fImage" type="file" accept="image/*" hidden />
+            Upload image
+          </label>
+          <button id="btnClearImage" class="ghost" type="button">Remove</button>
+        </div>
+        <p class="hint">Drag on the preview to move the art · scroll to zoom · use the sliders for fine control.</p>
+
+        <label class="field slider">
+          <span>Zoom <output id="outScale">100%</output></span>
+          <input id="fScale" type="range" min="10" max="400" value="100" />
+        </label>
+        <label class="field slider">
+          <span>Rotation <output id="outRot">0°</output></span>
+          <input id="fRot" type="range" min="-180" max="180" value="0" />
+        </label>
+        <div class="art-controls">
+          <button id="btnFitCover" class="ghost" type="button">Fill frame</button>
+          <button id="btnFitContain" class="ghost" type="button">Fit whole image</button>
+          <button id="btnResetArt" class="ghost" type="button">Reset</button>
+        </div>
+
+        <h2>4. Save</h2>
+        <div class="save-row">
+          <button id="btnSave" class="primary" type="button">Save card</button>
+          <button id="btnNew" class="ghost" type="button">New / clear</button>
+          <button id="btnPng" class="ghost" type="button">Download PNG</button>
+        </div>
+        <p id="editingNote" class="hint hidden"></p>
+      </div>
+
+      <div class="panel preview-panel">
+        <h2>Live preview</h2>
+        <div class="canvas-wrap">
+          <canvas id="preview" width="750" height="1050"></canvas>
+        </div>
+        <p class="hint center">63.5 × 88.9 mm (poker size) · rendered at 300 DPI</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COLLECTION ============ -->
+  <section id="tab-collection" class="tabpanel">
+    <div class="panel">
+      <div class="collection-head">
+        <h2>Saved cards</h2>
+        <div class="collection-actions">
+          <label class="filebtn small">
+            <input id="fImport" type="file" accept="application/json" hidden />
+            Import .json
+          </label>
+          <button id="btnExportJson" class="ghost small" type="button">Export .json</button>
+          <button id="btnClearAll" class="danger small" type="button">Delete all</button>
+        </div>
+      </div>
+      <div id="gallery" class="gallery"></div>
+      <p id="emptyMsg" class="empty">No cards saved yet. Head to <strong>Create</strong> to make your first one.</p>
+    </div>
+  </section>
+
+  <!-- ============ PRINT ============ -->
+  <section id="tab-print" class="tabpanel">
+    <div class="panel print-panel">
+      <h2>Print sheet options</h2>
+      <div class="print-grid">
+        <label class="field">
+          <span>Page size</span>
+          <select id="pPage">
+            <option value="a4">A4 (210 × 297 mm)</option>
+            <option value="letter">US Letter (216 × 279 mm)</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Card size</span>
+          <select id="pSize">
+            <option value="63.5x88.9">Poker / standard — 63.5 × 88.9 mm</option>
+            <option value="59x91">Bridge — 59 × 91 mm</option>
+            <option value="70x120">Tarot — 70 × 120 mm</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Gap between cards (mm)</span>
+          <input id="pGap" type="number" min="0" max="10" step="0.5" value="0" />
+        </label>
+        <label class="field">
+          <span>Image quality</span>
+          <select id="pQuality">
+            <option value="0.92">High (smaller file)</option>
+            <option value="1">Maximum (PNG, large file)</option>
+          </select>
+        </label>
+        <label class="check"><input id="pMarks" type="checkbox" checked /> <span>Draw cut guides</span></label>
+        <label class="check"><input id="pOutline" type="checkbox" checked /> <span>Thin card outline</span></label>
+      </div>
+
+      <h2>Cards to include</h2>
+      <div class="print-toolbar">
+        <button id="btnSelAll" class="ghost small" type="button">Select all</button>
+        <button id="btnSelNone" class="ghost small" type="button">Select none</button>
+        <span id="printSummary" class="hint"></span>
+      </div>
+      <div id="printList" class="print-list"></div>
+
+      <div class="save-row">
+        <button id="btnPdf" class="primary" type="button">Generate PDF</button>
+        <span id="pdfStatus" class="hint"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/templates.js"></script>
+<script src="js/renderer.js"></script>
+<script src="js/store.js"></script>
+<script src="js/pdf.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
