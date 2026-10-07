@@ -41,7 +41,7 @@
       name: 'Shadow',
       frame: 'shadow.png',
       swatch: 'linear-gradient(135deg,#7d1330,#3a0a16)',
-      defaultVictory: 'Tous les personnages Hunter sont morts.',
+      defaultVictory: 'Tous les personnages Hunter sont morts ou 3 personnages Neutres sont morts.',
       lockVictory: true,
       colors: {
         title: '#F6E7CB', letter: '#F8EBD2', hp: '#FFF1E2',
