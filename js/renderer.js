@@ -223,6 +223,21 @@
     });
   }
  
+  // Draws text with an optional outline (stroke first, fill on top so the
+  // letters stay crisp and only the outer half of the stroke is visible).
+  function drawOutlinedText(ctx, text, x, y, outline) {
+    if (outline && outline.width) {
+      ctx.save();
+      ctx.lineJoin = 'round';
+      ctx.miterLimit = 2;
+      ctx.lineWidth = outline.width;
+      ctx.strokeStyle = outline.color || '#FFFFFF';
+      ctx.strokeText(text, x, y);
+      ctx.restore();
+    }
+    ctx.fillText(text, x, y);
+  }
+ 
   function drawFittedLine(ctx, text, box, opts) {
     var size = opts.maxSize;
     var left = opts.align === 'left';
@@ -241,7 +256,7 @@
       ctx.shadowOffsetY = 2;
     }
     ctx.fillStyle = opts.color;
-    ctx.fillText(text, left ? box.x : box.x + box.w / 2, box.y + box.h / 2);
+    drawOutlinedText(ctx, text, left ? box.x : box.x + box.w / 2, box.y + box.h / 2, opts.outline);
     if (opts.shadow) ctx.restore();
   }
  
@@ -331,6 +346,7 @@
           family: tpl.title.family,
           shadow: tpl.title.shadow,
           color: tpl.colors.title,
+          outline: tpl.title.outline,
           align: hasLetter ? 'left' : 'center'
         });
       }
@@ -343,9 +359,7 @@
       ctx.textBaseline = 'middle';
       ctx.font = l.weight + ' ' + l.size + 'px ' + l.family;
       ctx.fillStyle = tpl.colors.letter;
-      ctx.shadowColor = 'rgba(0,0,0,.45)';
-      ctx.shadowBlur = 10;
-      ctx.fillText(title.charAt(0).toUpperCase(), l.cx, l.cy + l.size * 0.03);
+      drawOutlinedText(ctx, title.charAt(0).toUpperCase(), l.cx, l.cy + l.size * 0.03, l.outline);
       ctx.restore();
     }
  
@@ -356,9 +370,7 @@
       ctx.textBaseline = 'middle';
       ctx.font = hp.weight + ' ' + hp.size + 'px ' + hp.family;
       ctx.fillStyle = tpl.colors.hp;
-      ctx.shadowColor = 'rgba(0,0,0,.5)';
-      ctx.shadowBlur = 8;
-      ctx.fillText(String(card.hp), hp.cx, hp.cy + hp.size * 0.03);
+      drawOutlinedText(ctx, String(card.hp), hp.cx, hp.cy + hp.size * 0.03, hp.outline);
       ctx.restore();
     }
  
@@ -424,4 +436,3 @@
     baseCoverScale: baseCoverScale
   };
 })(window);
- 
