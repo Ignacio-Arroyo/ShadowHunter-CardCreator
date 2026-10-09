@@ -22,7 +22,7 @@
       artOnTop: false,
       // slightly larger than the transparent window so no gap shows at its edges
       art: { shape: 'rect', x: 100, y: 110, w: 672, h: 560 },
-      title: { x: 245, y: 20, w: 555, h: 92, maxSize: 52, minSize: 24, weight: 'bold', family: SERIF, shadow: 'rgba(0,0,0,.55)' },
+      title: { x: 245, y: 20, w: 555, h: 92, maxSize: 52, minSize: 24, weight: 'bold', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
       letter: { cx: 137, cy: 123, r: 75, size: 96, weight: 'bold', family: SERIF },
       hp: { cx: 786, cy: 722, r: 52, size: 58, weight: 'bold', family: SERIF },
       panel: { x: 135, y: 790, w: 605, h: 282 },
@@ -44,7 +44,7 @@
       defaultVictory: 'Tous les personnages Hunter sont morts ou 3 personnages Neutres sont morts.',
       lockVictory: true,
       colors: {
-        title: '#F6E7CB', letter: '#F8EBD2', hp: '#FFF1E2',
+        title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#C4423C', body: '#EFE3CB'
       },
       // hides the victory text baked into the artwork so we can typeset our own
@@ -59,7 +59,7 @@
       defaultVictory: 'Tous les personnages Shadow sont morts.',
       lockVictory: true,
       colors: {
-        title: '#F6E7CB', letter: '#F0F6FF', hp: '#FFF1E2',
+        title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#79B0E2', body: '#EFE3CB'
       },
       patch: null
@@ -73,7 +73,7 @@
       defaultVictory: '',
       lockVictory: false,
       colors: {
-        title: '#F6E7CB', letter: '#4A2A0C', hp: '#FFF1E2',
+        title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#E7BA5A', body: '#EFE3CB'
       },
       patch: { target: { x: 104, y: 786, w: 668, h: 200 }, src: { x: 104, y: 1000, w: 668, h: 58 }, feather: 26 }
