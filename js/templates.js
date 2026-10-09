@@ -22,14 +22,14 @@
       artOnTop: false,
       // slightly larger than the transparent window so no gap shows at its edges
       art: { shape: 'rect', x: 100, y: 110, w: 672, h: 560 },
-      title: { x: 245, y: 20, w: 555, h: 92, maxSize: 52, minSize: 24, weight: 'bold', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
+      title: { x: 245, y: 20, w: 555, h: 92, maxSize: 52, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
       letter: { cx: 137, cy: 123, r: 75, size: 96, weight: 'bold', family: SERIF },
       hp: { cx: 786, cy: 722, r: 52, size: 58, weight: 'bold', family: SERIF },
       panel: { x: 135, y: 790, w: 605, h: 282 },
       headingSize: 30,
       bodySize: 32,
-      victoryLabel: 'CONDITIONS DE VICTOIRE :',
-      abilityLabel: 'CAPACITÉ SPÉCIALE'
+      victoryLabel: 'Conditions de victoire :',
+      abilityLabel: 'Capacité spéciale'
     };
     Object.keys(extra).forEach(function (k) { base[k] = extra[k]; });
     return base;
