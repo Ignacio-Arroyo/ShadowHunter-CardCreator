@@ -26,7 +26,7 @@
       title: { x: 218, y: 20, w: 582, h: 92, maxSize: 80, minSize: 60, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
       letter: { cx: 135, cy: 120, r: 75, size: 110, weight: 'bold', family: SERIF },
       hp: { cx: 775, cy: 710, r: 52, size: 70, weight: 'bold', family: SERIF },
-      panel: { x: 117, y: 785, w: 639, h: 282 },
+      panel: { x: 100, y: 785, w: 672, h: 282 },
       headingSize: 30,
       bodySize: 32,
       victoryLabel: 'Conditions de victoire :',
