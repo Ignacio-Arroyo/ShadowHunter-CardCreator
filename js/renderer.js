@@ -225,7 +225,8 @@
  
   function drawFittedLine(ctx, text, box, opts) {
     var size = opts.maxSize;
-    ctx.textAlign = 'center';
+    var left = opts.align === 'left';
+    ctx.textAlign = left ? 'left' : 'center';
     ctx.textBaseline = 'middle';
     while (size > opts.minSize) {
       ctx.font = (opts.variant || 'normal') + ' ' + (opts.weight || 'bold') + ' ' + size + 'px ' + (opts.family || SERIF);
@@ -240,7 +241,7 @@
       ctx.shadowOffsetY = 2;
     }
     ctx.fillStyle = opts.color;
-    ctx.fillText(text, box.x + box.w / 2, box.y + box.h / 2);
+    ctx.fillText(text, left ? box.x : box.x + box.w / 2, box.y + box.h / 2);
     if (opts.shadow) ctx.restore();
   }
  
@@ -317,15 +318,22 @@
  
     var title = String(card.title || '').trim();
     if (title) {
-      drawFittedLine(ctx, title, tpl.title, {
-        maxSize: tpl.title.maxSize,
-        minSize: tpl.title.minSize,
-        weight: tpl.title.weight,
-        variant: tpl.title.variant,
-        family: tpl.title.family,
-        shadow: tpl.title.shadow,
-        color: tpl.colors.title
-      });
+      // With a letter badge, the first letter lives in the badge and the
+      // rest of the title is drawn left-aligned right next to it.
+      var hasLetter = !!tpl.letter;
+      var titleText = hasLetter ? title.slice(1).trim() : title;
+      if (titleText) {
+        drawFittedLine(ctx, titleText, tpl.title, {
+          maxSize: tpl.title.maxSize,
+          minSize: tpl.title.minSize,
+          weight: tpl.title.weight,
+          variant: tpl.title.variant,
+          family: tpl.title.family,
+          shadow: tpl.title.shadow,
+          color: tpl.colors.title,
+          align: hasLetter ? 'left' : 'center'
+        });
+      }
     }
  
     if (tpl.letter && title) {
