@@ -23,9 +23,9 @@
       // slightly larger than the transparent window so no gap shows at its edges
       art: { shape: 'rect', x: 100, y: 110, w: 672, h: 560 },
       // title box starts just right of the letter badge (badge ends at x = 137 + 75 = 212)
-      title: { x: 225, y: 15, w: 575, h: 92, maxSize: 80, minSize: 60, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
-      letter: { cx: 135, cy: 120, r: 75, size: 110, weight: 'bold', family: SERIF },
-      hp: { cx: 775, cy: 710, r: 52, size: 70, weight: 'bold', family: SERIF },
+      title: { x: 225, y: 15, w: 575, h: 92, maxSize: 80, minSize: 60, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: null, outline: { color: '#FFFFFF', width: 4 } },
+      letter: { cx: 135, cy: 120, r: 75, size: 110, weight: 'bold', family: SERIF, outline: { color: '#FFFFFF', width: 5 } },
+      hp: { cx: 775, cy: 710, r: 52, size: 70, weight: 'bold', family: SERIF, outline: { color: '#FFFFFF', width: 5 } },
       panel: { x: 100, y: 785, w: 672, h: 282 },
       headingSize: 30,
       bodySize: 32,
@@ -175,4 +175,3 @@
     scaleOf: function (tpl) { return { sx: CARD_W / tpl.frameW, sy: CARD_H / tpl.frameH }; }
   };
 })(window);
- 
