@@ -2,14 +2,14 @@
    All internal drawing happens in the frame's native pixel space. */
 (function (global) {
   'use strict';
-
+ 
   var T = global.SHTemplates;
   var W = T.CARD_W, H = T.CARD_H;
   var SERIF = T.SERIF;
-
+ 
   var imageCache = {};
   var framePromises = {};
-
+ 
   function loadImage(src) {
     return new Promise(function (resolve, reject) {
       if (!src) { resolve(null); return; }
@@ -20,20 +20,20 @@
       img.src = src;
     });
   }
-
+ 
   function frameOf(tpl) {
     return imageCache[tpl.frame] || null;
   }
-
+ 
   function loadFrame(tpl) {
     if (!framePromises[tpl.frame]) framePromises[tpl.frame] = loadImage(tpl.frame);
     return framePromises[tpl.frame];
   }
-
+ 
   function preloadFrames() {
     return Promise.all(T.ORDER.map(function (id) { return loadFrame(T.get(id)); }));
   }
-
+ 
   /* ---------------- art window helpers ---------------- */
   function artBox(tpl) {
     var a = tpl.art;
@@ -41,7 +41,7 @@
     if (a.shape === 'circle') return { x: a.cx - a.r, y: a.cy - a.r, w: a.r * 2, h: a.r * 2 };
     return { x: a.cx - a.rx, y: a.cy - a.ry, w: a.rx * 2, h: a.ry * 2 };
   }
-
+ 
   function clipArt(ctx, tpl) {
     var a = tpl.art;
     ctx.beginPath();
@@ -54,12 +54,12 @@
     }
     ctx.clip();
   }
-
+ 
   function baseCoverScale(img, tpl) {
     var box = artBox(tpl);
     return Math.max(box.w / img.naturalWidth, box.h / img.naturalHeight);
   }
-
+ 
   function drawArtwork(ctx, tpl, img, tr) {
     var box = artBox(tpl);
     ctx.save();
@@ -81,7 +81,7 @@
     }
     ctx.restore();
   }
-
+ 
   /* ---------------- baked-text patch ---------------- */
   function drawPatch(ctx, frameImg, patch) {
     if (!patch || !frameImg) return;
@@ -106,7 +106,7 @@
     octx.fillRect(0, 0, t.w, t.h);
     ctx.drawImage(off, t.x, t.y);
   }
-
+ 
   /* ---------------- text helpers ---------------- */
   function wrapLines(ctx, text, maxWidth) {
     var out = [];
@@ -123,11 +123,11 @@
     });
     return out;
   }
-
+ 
   function setLetterSpacing(ctx, px) {
     if ('letterSpacing' in ctx) ctx.letterSpacing = px + 'px';
   }
-
+ 
   // segments: [{ text, color }] -> word tokens keeping each word's colour
   function tokenize(segments) {
     var tokens = [];
@@ -138,7 +138,7 @@
     });
     return tokens;
   }
-
+ 
   function wrapTokens(ctx, tokens, maxWidth) {
     var lines = [], line = [], width = 0;
     var space = ctx.measureText(' ').width;
@@ -157,7 +157,7 @@
     if (line.length) lines.push(line);
     return lines;
   }
-
+ 
   function drawTokenLine(ctx, tokens, cx, y, fallbackColor) {
     var space = ctx.measureText(' ').width;
     var total = 0;
@@ -174,12 +174,12 @@
     });
     ctx.textAlign = 'center';
   }
-
+ 
   function measureBlocks(ctx, blocks, boxW, scale) {
     var items = [], total = 0;
     blocks.forEach(function (b) {
       var size = Math.max(11, Math.round(b.size * scale));
-      ctx.font = (b.weight || 'normal') + ' ' + size + 'px ' + (b.family || SERIF);
+      ctx.font = (b.variant || 'normal') + ' ' + (b.weight || 'normal') + ' ' + size + 'px ' + (b.family || SERIF);
       setLetterSpacing(ctx, b.spacing ? b.spacing * scale : 0);
       var lines = b.segments ? wrapTokens(ctx, tokenize(b.segments), boxW) : wrapLines(ctx, b.text, boxW);
       setLetterSpacing(ctx, 0);
@@ -190,27 +190,27 @@
     });
     return { items: items, height: total };
   }
-
+ 
   function drawBlocks(ctx, blocks, box) {
     blocks = blocks.filter(function (b) {
       return b && (b.segments ? b.segments.length : String(b.text).trim());
     });
     if (!blocks.length) return;
-
+ 
     var layout = null;
     for (var scale = 1; scale >= 0.5; scale -= 0.04) {
       layout = measureBlocks(ctx, blocks, box.w, scale);
       if (layout.height <= box.h) break;
     }
-
+ 
     var y = box.y + Math.max(0, (box.h - layout.height) / 2);
     var cx = box.x + box.w / 2;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
-
+ 
     layout.items.forEach(function (item) {
       y += item.gapBefore;
-      ctx.font = (item.b.weight || 'normal') + ' ' + item.size + 'px ' + (item.b.family || SERIF);
+      ctx.font = (item.b.variant || 'normal') + ' ' + (item.b.weight || 'normal') + ' ' + item.size + 'px ' + (item.b.family || SERIF);
       ctx.fillStyle = item.b.color;
       setLetterSpacing(ctx, item.b.spacing || 0);
       item.lines.forEach(function (line) {
@@ -222,17 +222,17 @@
       setLetterSpacing(ctx, 0);
     });
   }
-
+ 
   function drawFittedLine(ctx, text, box, opts) {
     var size = opts.maxSize;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     while (size > opts.minSize) {
-      ctx.font = (opts.weight || 'bold') + ' ' + size + 'px ' + (opts.family || SERIF);
+      ctx.font = (opts.variant || 'normal') + ' ' + (opts.weight || 'bold') + ' ' + size + 'px ' + (opts.family || SERIF);
       if (ctx.measureText(text).width <= box.w) break;
       size -= 2;
     }
-    ctx.font = (opts.weight || 'bold') + ' ' + size + 'px ' + (opts.family || SERIF);
+    ctx.font = (opts.variant || 'normal') + ' ' + (opts.weight || 'bold') + ' ' + size + 'px ' + (opts.family || SERIF);
     if (opts.shadow) {
       ctx.save();
       ctx.shadowColor = opts.shadow;
@@ -243,30 +243,30 @@
     ctx.fillText(text, box.x + box.w / 2, box.y + box.h / 2);
     if (opts.shadow) ctx.restore();
   }
-
+ 
   /* ---------------- panel content per template kind ---------------- */
   function panelBlocks(tpl, card) {
     var c = tpl.colors;
     var blocks = [];
-
+ 
     if (tpl.kind === 'character') {
       var victory = card.victoryText;
       if (victory === undefined || victory === null) victory = tpl.defaultVictory || '';
       if (tpl.lockVictory) victory = tpl.defaultVictory;
       if (String(victory).trim()) {
-        blocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', color: c.heading, spacing: 1.5 });
+        blocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', color: c.heading, spacing: 1.5 });
         blocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24 });
       }
       var abilityHeading = tpl.abilityLabel + (String(card.abilityName || '').trim()
-        ? ' : ' + String(card.abilityName).trim().toUpperCase()
+        ? ' : ' + String(card.abilityName).trim()
         : ' :');
       if (String(card.abilityText || '').trim() || String(card.abilityName || '').trim()) {
-        blocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', color: c.heading, spacing: 1.5, gapBefore: 18 });
+        blocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', color: c.heading, spacing: 1.5, gapBefore: 18 });
         blocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24 });
       }
       return blocks;
     }
-
+ 
     if (tpl.hasVisionTypes) {
       var chosen = (card.visionTypes || []).filter(function (t) { return T.VISION_TYPES[t]; });
       if (chosen.length) {
@@ -278,7 +278,7 @@
         blocks.push({ segments: segments, size: tpl.bodySize, weight: 'bold', color: c.body, lh: 1.24 });
       }
     }
-
+ 
     if (tpl.hasSpellKind) {
       var label = T.SPELL_KINDS[card.spellKind || 'immediate'];
       blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', color: c.heading, spacing: 2 });
@@ -286,20 +286,20 @@
     blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14 });
     return blocks;
   }
-
+ 
   /* ---------------- main render ---------------- */
   function renderCard(ctx, card, art) {
     var tpl = T.get(card.type);
     var frame = frameOf(tpl);
     var s = T.scaleOf(tpl);
     var tr = card.transform || {};
-
+ 
     ctx.save();
     ctx.clearRect(0, 0, W, H);
     ctx.scale(s.sx, s.sy);
-
+ 
     if (!tpl.artOnTop) drawArtwork(ctx, tpl, art, tr);
-
+ 
     if (frame) {
       ctx.drawImage(frame, 0, 0, tpl.frameW, tpl.frameH);
     } else {
@@ -310,23 +310,24 @@
       ctx.textAlign = 'center';
       ctx.fillText('Chargement du gabarit…', tpl.frameW / 2, tpl.frameH / 2);
     }
-
+ 
     if (tpl.artOnTop) drawArtwork(ctx, tpl, art, tr);
-
+ 
     drawPatch(ctx, frame, tpl.patch);
-
+ 
     var title = String(card.title || '').trim();
     if (title) {
       drawFittedLine(ctx, title, tpl.title, {
         maxSize: tpl.title.maxSize,
         minSize: tpl.title.minSize,
         weight: tpl.title.weight,
+        variant: tpl.title.variant,
         family: tpl.title.family,
         shadow: tpl.title.shadow,
         color: tpl.colors.title
       });
     }
-
+ 
     if (tpl.letter && title) {
       var l = tpl.letter;
       ctx.save();
@@ -339,7 +340,7 @@
       ctx.fillText(title.charAt(0).toUpperCase(), l.cx, l.cy + l.size * 0.03);
       ctx.restore();
     }
-
+ 
     if (tpl.hasHp && card.hp !== '' && card.hp !== null && card.hp !== undefined) {
       var hp = tpl.hp;
       ctx.save();
@@ -352,14 +353,14 @@
       ctx.fillText(String(card.hp), hp.cx, hp.cy + hp.size * 0.03);
       ctx.restore();
     }
-
+ 
     drawBlocks(ctx, panelBlocks(tpl, card), tpl.panel);
-
+ 
     if (global.SH_DEBUG_BOXES) drawDebug(ctx, tpl);
-
+ 
     ctx.restore();
   }
-
+ 
   function drawDebug(ctx, tpl) {
     ctx.save();
     ctx.lineWidth = 2;
@@ -384,7 +385,7 @@
     }
     ctx.restore();
   }
-
+ 
   function renderCardAsync(ctx, card) {
     var tpl = T.get(card.type);
     return Promise.all([
@@ -395,7 +396,7 @@
       return res[1];
     });
   }
-
+ 
   function renderToCanvas(card, width) {
     var canvas = document.createElement('canvas');
     canvas.width = width || W;
@@ -404,7 +405,7 @@
     ctx.scale(canvas.width / W, canvas.height / H);
     return renderCardAsync(ctx, card).then(function () { return canvas; });
   }
-
+ 
   global.SHRenderer = {
     renderCard: renderCard,
     renderCardAsync: renderCardAsync,
@@ -415,3 +416,4 @@
     baseCoverScale: baseCoverScale
   };
 })(window);
+ 
