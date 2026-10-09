@@ -3,12 +3,12 @@
    (see frameW / frameH); the renderer scales that space onto the 750 x 1050 print card. */
 (function (global) {
   'use strict';
-
+ 
   var CARD_W = 750;   // 63.5 mm @ 300 DPI
   var CARD_H = 1050;  // 88.9 mm @ 300 DPI
-
+ 
   var SERIF = 'Georgia, "Times New Roman", serif';
-
+ 
   /* ---- shared geometry of the three character frames (873 x 1216) ---- */
   function characterBase(extra) {
     var base = {
@@ -22,9 +22,10 @@
       artOnTop: false,
       // slightly larger than the transparent window so no gap shows at its edges
       art: { shape: 'rect', x: 100, y: 110, w: 672, h: 560 },
-      title: { x: 245, y: 20, w: 555, h: 92, maxSize: 52, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
+      // title box starts just right of the letter badge (badge ends at x = 137 + 75 = 212)
+      title: { x: 215, y: 20, w: 585, h: 92, maxSize: 52, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(255,255,255,.6)' },
       letter: { cx: 137, cy: 123, r: 75, size: 96, weight: 'bold', family: SERIF },
-      hp: { cx: 786, cy: 722, r: 52, size: 58, weight: 'bold', family: SERIF },
+      hp: { cx: 786, cy: 722, r: 52, size: 70, weight: 'bold', family: SERIF },
       panel: { x: 135, y: 790, w: 605, h: 282 },
       headingSize: 30,
       bodySize: 32,
@@ -34,7 +35,7 @@
     Object.keys(extra).forEach(function (k) { base[k] = extra[k]; });
     return base;
   }
-
+ 
   var TEMPLATES = {
     shadow: characterBase({
       id: 'shadow',
@@ -50,7 +51,7 @@
       // hides the victory text baked into the artwork so we can typeset our own
       patch: { target: { x: 104, y: 786, w: 668, h: 124 }, src: { x: 104, y: 950, w: 668, h: 60 }, feather: 26 }
     }),
-
+ 
     hunter: characterBase({
       id: 'hunter',
       name: 'Hunter',
@@ -64,7 +65,7 @@
       },
       patch: null
     }),
-
+ 
     neutral: characterBase({
       id: 'neutral',
       name: 'Neutral',
@@ -78,7 +79,7 @@
       },
       patch: { target: { x: 104, y: 786, w: 668, h: 200 }, src: { x: 104, y: 1000, w: 668, h: 58 }, feather: 26 }
     }),
-
+ 
     vision: {
       id: 'vision',
       name: 'Vision',
@@ -103,7 +104,7 @@
       colors: { title: '#F3EBD2', heading: '#D8E8B4', body: '#F2ECD8' },
       patch: null
     },
-
+ 
     hunterSpell: {
       id: 'hunterSpell',
       name: 'Hunter Spell',
@@ -125,7 +126,7 @@
       colors: { title: '#173D5C', heading: '#2E6E9E', body: '#1B1B1B' },
       patch: null
     },
-
+ 
     shadowSpell: {
       id: 'shadowSpell',
       name: 'Shadow Spell',
@@ -148,20 +149,20 @@
       patch: null
     }
   };
-
+ 
   var SPELL_KINDS = {
     immediate: 'À JOUER IMMÉDIATEMENT',
     equipment: 'ÉQUIPEMENT'
   };
-
+ 
   var VISION_TYPES = {
     hunter: { label: 'Hunter', color: '#6FB3E8' },
     shadow: { label: 'Shadow', color: '#E8635A' },
     neutral: { label: 'Neutre', color: '#F0A94A' }
   };
-
+ 
   var ORDER = ['shadow', 'hunter', 'neutral', 'vision', 'hunterSpell', 'shadowSpell'];
-
+ 
   global.SHTemplates = {
     CARD_W: CARD_W,
     CARD_H: CARD_H,
@@ -174,3 +175,4 @@
     scaleOf: function (tpl) { return { sx: CARD_W / tpl.frameW, sy: CARD_H / tpl.frameH }; }
   };
 })(window);
+ 
