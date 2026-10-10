@@ -297,7 +297,7 @@
  
     if (tpl.hasSpellKind) {
       var label = T.SPELL_KINDS[card.spellKind || 'immediate'];
-      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', color: c.heading, spacing: 2 });
+      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', color: c.heading, spacing: 2 });
     }
     blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14 });
     return blocks;
