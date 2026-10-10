@@ -97,7 +97,7 @@
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 505, rx: 320, ry: 293 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', family: SERIF, shadow: 'rgba(0,0,0,.5)' },
+      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(0,0,0,.5)' },
       panel: { x: 130, y: 884, w: 610, h: 246 },
       headingSize: 30,
       bodySize: 32,
@@ -119,11 +119,11 @@
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 506, rx: 309, ry: 293 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', family: SERIF, shadow: null },
+      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: null },
       panel: { x: 130, y: 884, w: 610, h: 246 },
       headingSize: 30,
       bodySize: 32,
-      colors: { title: '#173D5C', heading: '#2E6E9E', body: '#1B1B1B' },
+      colors: { title: '#2E6E9E', heading: '#2E6E9E', body: '#1B1B1B' },
       patch: null
     },
  
@@ -141,24 +141,24 @@
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 505.5, rx: 314, ry: 292 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', family: SERIF, shadow: 'rgba(0,0,0,.5)' },
+      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(0,0,0,.5)' },
       panel: { x: 130, y: 884, w: 610, h: 246 },
       headingSize: 30,
       bodySize: 32,
-      colors: { title: '#EFE2C6', heading: '#C9A227', body: '#EDE3CC' },
+      colors: { title: '#C9A227', heading: '#C9A227', body: '#EDE3CC' },
       patch: null
     }
   };
  
   var SPELL_KINDS = {
-    immediate: 'À JOUER IMMÉDIATEMENT',
-    equipment: 'ÉQUIPEMENT'
+    immediate: 'À joeur immédiatement',
+    equipment: 'Équipement'
   };
  
   var VISION_TYPES = {
-    hunter: { label: 'Hunter', color: '#6FB3E8' },
-    shadow: { label: 'Shadow', color: '#E8635A' },
-    neutral: { label: 'Neutre', color: '#F0A94A' }
+    hunter: { label: 'HUNTER', color: '#79B0E2' },
+    shadow: { label: 'SHADOW', color: '#C4423C' },
+    neutral: { label: 'NEUTRE', color: '#E7BA5A' }
   };
  
   var ORDER = ['shadow', 'hunter', 'neutral', 'vision', 'hunterSpell', 'shadowSpell'];
