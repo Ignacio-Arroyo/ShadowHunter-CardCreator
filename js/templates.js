@@ -98,7 +98,7 @@
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 505, rx: 320, ry: 293 },
       title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 130, y: 884, w: 610, h: 246 },
+      panel: { x: 106, y: 884, w: 660, h: 246 },
       headingSize: 30,
       bodySize: 32,
       colors: { title: '#F3EBD2', heading: '#D8E8B4', body: '#F2ECD8' },
@@ -142,7 +142,7 @@
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 505.5, rx: 314, ry: 292 },
       title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 130, y: 884, w: 610, h: 246 },
+      panel: { x: 106, y: 884, w: 660, h: 246 },
       headingSize: 30,
       bodySize: 32,
       colors: { title: '#C9A227', heading: '#C9A227', body: '#EDE3CC' },
