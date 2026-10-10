@@ -151,7 +151,7 @@
   };
  
   var SPELL_KINDS = {
-    immediate: 'À joeur immédiatement',
+    immediate: 'À jouer immédiatement',
     equipment: 'Équipement'
   };
  
