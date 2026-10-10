@@ -120,7 +120,7 @@
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 506, rx: 309, ry: 293 },
       title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: SERIF, shadow: null },
-      panel: { x: 130, y: 884, w: 610, h: 246 },
+      panel: { x: 106, y: 884, w: 660, h: 246 },
       headingSize: 30,
       bodySize: 32,
       colors: { title: '#2E6E9E', heading: '#2E6E9E', body: '#1B1B1B' },
