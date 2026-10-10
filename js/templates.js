@@ -61,7 +61,7 @@
       lockVictory: true,
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
-        heading: '#79B0E2', body: '#EFE3CB'
+        heading: '#1c439e', body: '#EFE3CB'
       },
       patch: null
     }),
@@ -156,7 +156,7 @@
   };
  
   var VISION_TYPES = {
-    hunter: { label: 'HUNTER', color: '#79B0E2' },
+    hunter: { label: 'HUNTER', color: '#1c439e' },
     shadow: { label: 'SHADOW', color: '#C4423C' },
     neutral: { label: 'NEUTRE', color: '#E7BA5A' }
   };
