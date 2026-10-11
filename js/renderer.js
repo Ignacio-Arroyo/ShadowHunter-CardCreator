@@ -355,7 +355,7 @@
       // With a letter badge, the first letter lives in the badge and the
       // rest of the title is drawn left-aligned right next to it.
       var hasLetter = !!tpl.letter;
-      var titleText = hasLetter ? title.slice(1).trim() : title;
+      var titleText = (hasLetter ? title.slice(1).trim() : title).toUpperCase();
       if (titleText) {
         drawFittedLine(ctx, titleText, tpl.title, {
           maxSize: tpl.title.maxSize,
