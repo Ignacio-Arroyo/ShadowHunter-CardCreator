@@ -24,9 +24,9 @@
       // slightly larger than the transparent window so no gap shows at its edges
       art: { shape: 'rect', x: 100, y: 110, w: 672, h: 560 },
       // title box starts just right of the letter badge (badge ends at x = 137 + 75 = 212)
-      title: { x: 235, y: 15, w: 565, h: 92, maxSize: 80, minSize: 60, weight: 'bold', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
-      letter: { cx: 130, cy: 120, r: 75, size: 110, weight: 'bold', family: UNICORN, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
-      hp: { cx: 775, cy: 710, r: 52, size: 70, weight: 'bold', family: UNICORN, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
+      title: { x: 235, y: 15, w: 565, h: 92, maxSize: 70, minSize: 60, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
+      letter: { cx: 130, cy: 120, r: 75, size: 110, weight: 'normal', family: UNICORN, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
+      hp: { cx: 775, cy: 710, r: 52, size: 70, weight: 'normal', family: UNICORN, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
       panel: { x: 100, y: 785, w: 672, h: 282 },
       headingSize: 30,
       bodySize: 32,
@@ -98,7 +98,7 @@
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 505, rx: 320, ry: 293 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
+      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
       panel: { x: 90, y: 884, w: 692, h: 246 },
       headingSize: 32,
       bodySize: 32,
@@ -120,7 +120,7 @@
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 506, rx: 309, ry: 293 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: UNICORN, shadow: null },
+      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null },
       panel: { x: 90, y: 884, w: 692, h: 246 },
       headingSize: 32,
       bodySize: 32,
@@ -142,7 +142,7 @@
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 436, cy: 505.5, rx: 314, ry: 292 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'bold', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
+      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
       panel: { x: 90, y: 884, w: 692, h: 246 },
       headingSize: 32,
       bodySize: 32,
