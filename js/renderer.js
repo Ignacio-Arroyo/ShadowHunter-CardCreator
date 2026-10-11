@@ -30,8 +30,25 @@
     return framePromises[tpl.frame];
   }
  
+  /* ---------------- web font loading ---------------- */
+  // The canvas does not trigger the download of a web font by itself: without
+  // this, the first drawing would fall back to Georgia. The name must match the
+  // font-family declared in the @font-face rule.
+  var fontPromise = null;
+  function loadFonts() {
+    if (!fontPromise) {
+      fontPromise = (document.fonts && document.fonts.load)
+        ? Promise.all([
+            document.fonts.load('normal 60px "Unicorn"'),
+            document.fonts.load('normal 110px "Unicorn"')
+          ]).catch(function () {})
+        : Promise.resolve();
+    }
+    return fontPromise;
+  }
+ 
   function preloadFrames() {
-    return Promise.all(T.ORDER.map(function (id) { return loadFrame(T.get(id)); }));
+    return Promise.all([loadFonts()].concat(T.ORDER.map(function (id) { return loadFrame(T.get(id)); })));
   }
  
   /* ---------------- art window helpers ---------------- */
@@ -261,6 +278,8 @@
   }
  
   /* ---------------- panel content per template kind ---------------- */
+  // tpl.headingFont (optional) sets the font of the panel headings; when it is
+  // not defined the headings keep the default serif font.
   function panelBlocks(tpl, card) {
     var c = tpl.colors;
     var blocks = [];
@@ -270,14 +289,14 @@
       if (victory === undefined || victory === null) victory = tpl.defaultVictory || '';
       if (tpl.lockVictory) victory = tpl.defaultVictory;
       if (String(victory).trim()) {
-        blocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', color: c.heading, spacing: 1.5 });
+        blocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5 });
         blocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24 });
       }
       var abilityHeading = tpl.abilityLabel + (String(card.abilityName || '').trim()
         ? ' : ' + String(card.abilityName).trim()
         : ' :');
       if (String(card.abilityText || '').trim() || String(card.abilityName || '').trim()) {
-        blocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', color: c.heading, spacing: 1.5, gapBefore: 18 });
+        blocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, gapBefore: 18 });
         blocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24 });
       }
       return blocks;
@@ -297,7 +316,7 @@
  
     if (tpl.hasSpellKind) {
       var label = T.SPELL_KINDS[card.spellKind || 'immediate'];
-      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', color: c.heading, spacing: 2 });
+      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 2 });
     }
     blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14 });
     return blocks;
@@ -410,7 +429,8 @@
     var tpl = T.get(card.type);
     return Promise.all([
       loadFrame(tpl).catch(function () { return null; }),
-      loadImage(card.image).catch(function () { return null; })
+      loadImage(card.image).catch(function () { return null; }),
+      loadFonts()
     ]).then(function (res) {
       renderCard(ctx, card, res[1]);
       return res[1];
