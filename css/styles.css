@@ -162,3 +162,9 @@ button.small, .filebtn.small { padding: 6px 11px; font-size: .78rem; }
 .print-row .rname { flex: 1; font-size: .8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .print-row input[type=number] { width: 58px; }
 .print-row input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; }
+
+@font-face {
+  font-family: 'Unicorn';
+  src: url('../unicorn.ttf') format('truetype');
+  font-display: swap;
+}
