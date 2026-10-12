@@ -86,7 +86,7 @@
       lockVictory: true,
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
-        heading: '#1A53AA', body: '#EFE3CB',
+        heading: '#3C71BB', body: '#EFE3CB',
         badge: '#1A53AA', faction: '#1A53AA', pvLabel: '#000000'
       },
       patch: null
