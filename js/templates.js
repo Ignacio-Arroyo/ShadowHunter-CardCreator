@@ -45,7 +45,7 @@
       factionLabel: { x: 95, y: 660, w: 300, h: 60, maxSize: 60, minSize:60, weight: 'normal', family: UNICORN, align: 'left' },
  
       // "PV" just before the HP counter, right side, middle
-      pvLabel: { text: 'PV', x: 552, y: 660, w: 120, h: 60, maxSize: 65, minSize:65, weight: 'normal', family: UNICORN, align: 'right' },
+      pvLabel: { text: 'PV', x: 552, y: 665, w: 120, h: 60, maxSize: 65, minSize:65, weight: 'normal', family: UNICORN, align: 'right' },
  
       // victory conditions: top-aligned in this box (move it with x / y)
       victoryPanel: { x: 95, y: 760, w: 635, h: 130 },
@@ -66,7 +66,7 @@
       id: 'shadow',
       name: 'Shadow',
       swatch: 'linear-gradient(135deg,#7d1330,#3a0a16)',
-      factionText: 'SHADOW',
+      factionText: 'shadow',
       defaultVictory: 'Tous les personnages Hunter sont morts\nou 3 personnages Neutres sont morts.',
       lockVictory: true,
       colors: {
