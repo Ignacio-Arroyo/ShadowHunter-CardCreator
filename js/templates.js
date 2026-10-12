@@ -1,6 +1,9 @@
 /* Card template definitions.
    Every geometry value below is expressed in the NATIVE pixel space of the frame PNG
-   (see frameW / frameH); the renderer scales that space onto the 750 x 1050 print card. */
+   (see frameW / frameH); the renderer scales that space onto the 750 x 1050 print card.
+ 
+   NOTE: the coordinates of the 825 x 1125 frames are STARTING ESTIMATES (the old
+   873 x 1216 values rescaled). Turn on SH_DEBUG_BOXES in the console and adjust them. */
 (function (global) {
   'use strict';
  
@@ -10,7 +13,7 @@
   var SERIF = 'Georgia, "Times New Roman", serif';
   var UNICORN = 'Unicorn, Georgia, "Times New Roman", serif';
  
-  /* ---- shared geometry of the three character frames (873 x 1216) ---- */
+  /* ---- shared geometry of the three character cards (one frame: personnages.png, 825 x 1125) ---- */
   function characterBase(extra) {
     var base = {
       kind: 'character',
@@ -18,18 +21,39 @@
       hasVictory: true,
       hasAbility: true,
       hasSpellKind: false,
-      frameW: 873,
-      frameH: 1216,
+      frame: 'personnages.png',
+      frameW: 825,
+      frameH: 1125,
       artOnTop: false,
-      // slightly larger than the transparent window so no gap shows at its edges
-      art: { shape: 'rect', x: 100, y: 110, w: 672, h: 560 },
-      // title box starts just right of the letter badge (badge ends at x = 137 + 75 = 212)
-      title: { x: 235, y: 20, w: 565, h: 92, maxSize: 70, minSize: 60, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
-      letter: { cx: 130, cy: 120, r: 75, size: 120, weight: 'bold', family: UNICORN, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
-      hp: { cx: 775, cy: 714, r: 56, size: 70, weight: 'normal', family: UNICORN, outline: {color: 'rgba(255,255,255,.55)', width: 3} },
-      panel: { x: 100, y: 785, w: 672, h: 282 },
-      headingSize: 30,
-      bodySize: 32,
+ 
+      // illustration window
+      art: { shape: 'rect', x: 95, y: 102, w: 635, h: 518 },
+ 
+      // title: the first letter goes in the badge, the rest is drawn left-aligned in this box
+      title: { x: 222, y: 19, w: 534, h: 85, maxSize: 65, minSize: 56, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+ 
+      // coloured round zone (top left). Filled with colors.badge. onTop: false = drawn behind the frame
+      badge: { cx: 123, cy: 111, r: 70, onTop: true },
+ 
+      // the big letter, centred in the badge
+      letter: { cx: 123, cy: 111, r: 70, size: 112, weight: 'bold', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+ 
+      // HP counter
+      hp: { cx: 732, cy: 661, r: 52, size: 65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+ 
+      // "SHADOW" / "HUNTER" / "NEUTRE" (text comes from factionText), left side, middle
+      factionLabel: { x: 95, y: 631, w: 300, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'left' },
+ 
+      // "PV" just before the HP counter, right side, middle
+      pvLabel: { text: 'PV', x: 552, y: 631, w: 120, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'right' },
+ 
+      // victory conditions: top-aligned in this box (move it with x / y)
+      victoryPanel: { x: 95, y: 728, w: 635, h: 130 },
+      // special ability: starts right under the victory text (+ gap) and may go down to `bottom`
+      abilityPanel: { x: 95, w: 635, gap: 12, bottom: 988 },
+ 
+      headingSize: 28,
+      bodySize: 30,
       victoryLabel: 'Conditions de victoire :',
       abilityLabel: 'Capacité spéciale'
     };
@@ -41,28 +65,29 @@
     shadow: characterBase({
       id: 'shadow',
       name: 'Shadow',
-      frame: 'shadow.png',
       swatch: 'linear-gradient(135deg,#7d1330,#3a0a16)',
+      factionText: 'SHADOW',
       defaultVictory: 'Tous les personnages Hunter sont morts\nou 3 personnages Neutres sont morts.',
       lockVictory: true,
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
-        heading: '#C4423C', body: '#EFE3CB'
+        heading: '#C4423C', body: '#EFE3CB',
+        badge: '#C4423C', faction: '#C4423C', pvLabel: '#EFE3CB'
       },
-      // hides the victory text baked into the artwork so we can typeset our own
       patch: null
     }),
  
     hunter: characterBase({
       id: 'hunter',
       name: 'Hunter',
-      frame: 'hunter.png',
       swatch: 'linear-gradient(135deg,#17567f,#0a2438)',
+      factionText: 'HUNTER',
       defaultVictory: 'Tous les personnages Shadow sont morts.',
       lockVictory: true,
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
-        heading: '#3A6FD0', body: '#EFE3CB'
+        heading: '#3A6FD0', body: '#EFE3CB',
+        badge: '#3A6FD0', faction: '#3A6FD0', pvLabel: '#EFE3CB'
       },
       patch: null
     }),
@@ -70,13 +95,14 @@
     neutral: characterBase({
       id: 'neutral',
       name: 'Neutral',
-      frame: 'neutral.png',
       swatch: 'linear-gradient(135deg,#e0a83c,#8a5a12)',
+      factionText: 'NEUTRE',
       defaultVictory: '',
       lockVictory: false,
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
-        heading: '#E7BA5A', body: '#EFE3CB'
+        heading: '#E7BA5A', body: '#EFE3CB',
+        badge: '#E7BA5A', faction: '#E7BA5A', pvLabel: '#EFE3CB'
       },
       patch: null
     }),
@@ -95,14 +121,14 @@
       visionLead: 'Je pense que tu es',
       visionJoin: 'ou',
       visionTypeFont: UNICORN,
-      frameW: 873,
-      frameH: 1216,
+      frameW: 825,
+      frameH: 1125,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
-      art: { shape: 'ellipse', cx: 436, cy: 505, rx: 320, ry: 293 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 90, y: 884, w: 692, h: 246 },
-      headingSize: 32,
-      bodySize: 32,
+      art: { shape: 'ellipse', cx: 412, cy: 467, rx: 302, ry: 271 },
+      title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
+      panel: { x: 85, y: 818, w: 654, h: 228 },
+      headingSize: 30,
+      bodySize: 30,
       colors: { title: '#F3EBD2', heading: '#D8E8B4', body: '#F2ECD8' },
       patch: null
     },
@@ -111,20 +137,20 @@
       id: 'hunterSpell',
       name: 'Hunter Spell',
       kind: 'spell',
-      frame: 'hunter_spell.png',
+      frame: 'lumiere_spell.png',
       swatch: 'linear-gradient(135deg,#eef6fb,#a9cbe3)',
       hasHp: false,
       hasVictory: false,
       hasAbility: false,
       hasSpellKind: true,
-      frameW: 873,
-      frameH: 1216,
+      frameW: 825,
+      frameH: 1125,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
-      art: { shape: 'ellipse', cx: 436, cy: 506, rx: 309, ry: 293 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null },
-      panel: { x: 90, y: 884, w: 692, h: 246 },
-      headingSize: 32,
-      bodySize: 32,
+      art: { shape: 'ellipse', cx: 412, cy: 468, rx: 292, ry: 271 },
+      title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null },
+      panel: { x: 85, y: 818, w: 654, h: 228 },
+      headingSize: 30,
+      bodySize: 30,
       colors: { title: '#2E6E9E', heading: '#2E6E9E', body: '#1B1B1B' },
       patch: null
     },
@@ -133,20 +159,20 @@
       id: 'shadowSpell',
       name: 'Shadow Spell',
       kind: 'spell',
-      frame: 'shadow_spell.png',
+      frame: 'tenebres_spell.png',
       swatch: 'linear-gradient(135deg,#3a3a3a,#0c0c0c)',
       hasHp: false,
       hasVictory: false,
       hasAbility: false,
       hasSpellKind: true,
-      frameW: 873,
-      frameH: 1216,
+      frameW: 825,
+      frameH: 1125,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
-      art: { shape: 'ellipse', cx: 436, cy: 505.5, rx: 314, ry: 292 },
-      title: { x: 130, y: 58, w: 610, h: 122, maxSize: 54, minSize: 24, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 90, y: 884, w: 692, h: 246 },
-      headingSize: 32,
-      bodySize: 32,
+      art: { shape: 'ellipse', cx: 412, cy: 468, rx: 297, ry: 270 },
+      title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
+      panel: { x: 85, y: 818, w: 654, h: 228 },
+      headingSize: 30,
+      bodySize: 30,
       colors: { title: '#C9A227', heading: '#C9A227', body: '#EDE3CC' },
       patch: null
     }
@@ -177,3 +203,4 @@
     scaleOf: function (tpl) { return { sx: CARD_W / tpl.frameW, sy: CARD_H / tpl.frameH }; }
   };
 })(window);
+ 
