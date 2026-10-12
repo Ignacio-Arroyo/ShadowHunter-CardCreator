@@ -23,7 +23,7 @@
       hasSpellKind: false,
       frame: 'personnages.png',
       frameW: 825,
-      frameH: 1125,
+      frameH: 1155,
       artOnTop: false,
  
       // illustration window
@@ -122,7 +122,7 @@
       visionJoin: 'ou',
       visionTypeFont: UNICORN,
       frameW: 825,
-      frameH: 1125,
+      frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 412, cy: 467, rx: 302, ry: 271 },
       title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
@@ -144,7 +144,7 @@
       hasAbility: false,
       hasSpellKind: true,
       frameW: 825,
-      frameH: 1125,
+      frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 412, cy: 468, rx: 292, ry: 271 },
       title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null },
@@ -166,7 +166,7 @@
       hasAbility: false,
       hasSpellKind: true,
       frameW: 825,
-      frameH: 1125,
+      frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 412, cy: 468, rx: 297, ry: 270 },
       title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
