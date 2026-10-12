@@ -145,21 +145,29 @@
     if ('letterSpacing' in ctx) ctx.letterSpacing = px + 'px';
   }
  
-  // segments: [{ text, color }] -> word tokens keeping each word's colour
+  // segments: [{ text, color, family, weight }] -> word tokens keeping each
+  // word's colour and (optional) font
   function tokenize(segments) {
     var tokens = [];
     segments.forEach(function (seg) {
       String(seg.text).split(/\s+/).filter(Boolean).forEach(function (word) {
-        tokens.push({ word: word, color: seg.color });
+        tokens.push({ word: word, color: seg.color, family: seg.family, weight: seg.weight });
       });
     });
     return tokens;
   }
  
-  function wrapTokens(ctx, tokens, maxWidth) {
+  // canvas font string for a token; `base` carries the block's own font settings
+  function tokenFont(base, tk) {
+    return (base.variant || 'normal') + ' ' + (tk.weight || base.weight || 'normal') + ' ' + base.size + 'px ' + (tk.family || base.family || SERIF);
+  }
+ 
+  function wrapTokens(ctx, tokens, maxWidth, base) {
     var lines = [], line = [], width = 0;
+    ctx.font = tokenFont(base, {});
     var space = ctx.measureText(' ').width;
     tokens.forEach(function (tk) {
+      ctx.font = tokenFont(base, tk);
       var w = ctx.measureText(tk.word).width;
       var add = line.length ? space + w : w;
       if (line.length && width + add > maxWidth) {
@@ -172,23 +180,28 @@
       }
     });
     if (line.length) lines.push(line);
+    ctx.font = tokenFont(base, {});
     return lines;
   }
  
-  function drawTokenLine(ctx, tokens, cx, y, fallbackColor) {
+  function drawTokenLine(ctx, tokens, cx, y, fallbackColor, base) {
+    ctx.font = tokenFont(base, {});
     var space = ctx.measureText(' ').width;
     var total = 0;
     tokens.forEach(function (tk, i) {
+      ctx.font = tokenFont(base, tk);
       total += ctx.measureText(tk.word).width + (i ? space : 0);
     });
     var x = cx - total / 2;
     ctx.textAlign = 'left';
     tokens.forEach(function (tk, i) {
       if (i) x += space;
+      ctx.font = tokenFont(base, tk);
       ctx.fillStyle = tk.color || fallbackColor;
       ctx.fillText(tk.word, x, y);
       x += ctx.measureText(tk.word).width;
     });
+    ctx.font = tokenFont(base, {});
     ctx.textAlign = 'center';
   }
  
@@ -198,7 +211,9 @@
       var size = Math.max(11, Math.round(b.size * scale));
       ctx.font = (b.variant || 'normal') + ' ' + (b.weight || 'normal') + ' ' + size + 'px ' + (b.family || SERIF);
       setLetterSpacing(ctx, b.spacing ? b.spacing * scale : 0);
-      var lines = b.segments ? wrapTokens(ctx, tokenize(b.segments), boxW) : wrapLines(ctx, b.text, boxW);
+      var lines = b.segments
+        ? wrapTokens(ctx, tokenize(b.segments), boxW, { variant: b.variant, weight: b.weight, size: size, family: b.family })
+        : wrapLines(ctx, b.text, boxW);
       setLetterSpacing(ctx, 0);
       var lh = size * (b.lh || 1.28);
       var gapBefore = (b.gapBefore || 0) * scale;
@@ -232,7 +247,7 @@
       setLetterSpacing(ctx, item.b.spacing || 0);
       item.lines.forEach(function (line) {
         var baseline = y + (item.lh - item.size) / 2;
-        if (item.b.segments) drawTokenLine(ctx, line, cx, baseline, item.b.color);
+        if (item.b.segments) drawTokenLine(ctx, line, cx, baseline, item.b.color, { variant: item.b.variant, weight: item.b.weight, size: item.size, family: item.b.family });
         else ctx.fillText(line, cx, baseline);
         y += item.lh;
       });
@@ -280,6 +295,8 @@
   /* ---------------- panel content per template kind ---------------- */
   // tpl.headingFont (optional) sets the font of the panel headings; when it is
   // not defined the headings keep the default serif font.
+  // tpl.visionTypeFont (optional) sets the font of the Hunter / Shadow / Neutre
+  // words on the Vision card.
   function panelBlocks(tpl, card) {
     var c = tpl.colors;
     var blocks = [];
@@ -308,7 +325,12 @@
         var segments = [{ text: tpl.visionLead, color: c.body }];
         chosen.forEach(function (t, i) {
           if (i) segments.push({ text: tpl.visionJoin, color: c.body });
-          segments.push({ text: T.VISION_TYPES[t].label, color: T.VISION_TYPES[t].color });
+          segments.push({
+            text: T.VISION_TYPES[t].label,
+            color: T.VISION_TYPES[t].color,
+            family: tpl.visionTypeFont,
+            weight: tpl.visionTypeFont ? 'normal' : undefined
+          });
         });
         blocks.push({ segments: segments, size: tpl.bodySize, weight: 'bold', color: c.body, lh: 1.24 });
       }
