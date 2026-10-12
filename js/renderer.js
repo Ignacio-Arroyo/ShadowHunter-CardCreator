@@ -99,6 +99,18 @@
     ctx.restore();
   }
  
+  /* ---------------- coloured badge (round zone, top left) ---------------- */
+  function drawBadge(ctx, tpl) {
+    var b = tpl.badge;
+    if (!b) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(b.cx, b.cy, b.r, 0, Math.PI * 2);
+    ctx.fillStyle = tpl.colors.badge || '#888888';
+    ctx.fill();
+    ctx.restore();
+  }
+ 
   /* ---------------- baked-text patch ---------------- */
   function drawPatch(ctx, frameImg, patch) {
     if (!patch || !frameImg) return;
@@ -223,11 +235,14 @@
     return { items: items, height: total };
   }
  
-  function drawBlocks(ctx, blocks, box) {
+  // Draws blocks of text in a box. opts.valign: 'middle' (default) or 'top'.
+  // Returns the height actually used (0 when there is nothing to draw).
+  function drawBlocks(ctx, blocks, box, opts) {
+    opts = opts || {};
     blocks = blocks.filter(function (b) {
       return b && (b.segments ? b.segments.length : String(b.text).trim());
     });
-    if (!blocks.length) return;
+    if (!blocks.length) return 0;
  
     var layout = null;
     for (var scale = 1; scale >= 0.5; scale -= 0.04) {
@@ -235,7 +250,7 @@
       if (layout.height <= box.h) break;
     }
  
-    var y = box.y + Math.max(0, (box.h - layout.height) / 2);
+    var y = box.y + (opts.valign === 'top' ? 0 : Math.max(0, (box.h - layout.height) / 2));
     var cx = box.x + box.w / 2;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
@@ -253,6 +268,7 @@
       });
       setLetterSpacing(ctx, 0);
     });
+    return layout.height;
   }
  
   // Draws text with an optional outline (stroke first, fill on top so the
@@ -270,10 +286,11 @@
     ctx.fillText(text, x, y);
   }
  
+  // One line of text fitted in a box. opts.align: 'left' | 'center' (default) | 'right'
   function drawFittedLine(ctx, text, box, opts) {
     var size = opts.maxSize;
-    var left = opts.align === 'left';
-    ctx.textAlign = left ? 'left' : 'center';
+    var align = opts.align || 'center';
+    ctx.textAlign = align;
     ctx.textBaseline = 'middle';
     while (size > opts.minSize) {
       ctx.font = (opts.variant || 'normal') + ' ' + (opts.weight || 'bold') + ' ' + size + 'px ' + (opts.family || SERIF);
@@ -288,36 +305,73 @@
       ctx.shadowOffsetY = 2;
     }
     ctx.fillStyle = opts.color;
-    drawOutlinedText(ctx, text, left ? box.x : box.x + box.w / 2, box.y + box.h / 2, opts.outline);
+    var x = align === 'left' ? box.x : (align === 'right' ? box.x + box.w : box.x + box.w / 2);
+    drawOutlinedText(ctx, text, x, box.y + box.h / 2, opts.outline);
     if (opts.shadow) ctx.restore();
   }
  
-  /* ---------------- panel content per template kind ---------------- */
+  // static label (faction name, "PV") drawn in its own box
+  function drawLabel(ctx, spec, text, color) {
+    if (!spec || !text) return;
+    drawFittedLine(ctx, text, spec, {
+      maxSize: spec.maxSize,
+      minSize: spec.minSize,
+      weight: spec.weight,
+      variant: spec.variant,
+      family: spec.family,
+      shadow: spec.shadow,
+      color: color,
+      outline: spec.outline,
+      align: spec.align
+    });
+  }
+ 
+  /* ---------------- panel content ---------------- */
   // tpl.headingFont (optional) sets the font of the panel headings; when it is
   // not defined the headings keep the default serif font.
+ 
+  // Character cards: the text is split in two independent parts.
+  function characterParts(tpl, card) {
+    var c = tpl.colors;
+    var victoryBlocks = [], abilityBlocks = [];
+ 
+    var victory = card.victoryText;
+    if (victory === undefined || victory === null) victory = tpl.defaultVictory || '';
+    if (tpl.lockVictory) victory = tpl.defaultVictory;
+    if (String(victory).trim()) {
+      victoryBlocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5 });
+      victoryBlocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24 });
+    }
+ 
+    var abilityHeading = tpl.abilityLabel + (String(card.abilityName || '').trim()
+      ? ' : ' + String(card.abilityName).trim()
+      : ' :');
+    if (String(card.abilityText || '').trim() || String(card.abilityName || '').trim()) {
+      abilityBlocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5 });
+      abilityBlocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24 });
+    }
+    return { victory: victoryBlocks, ability: abilityBlocks };
+  }
+ 
+  // Victory conditions in their own box, then the ability right underneath,
+  // whatever the height of the victory text. Returns the ability box (for debug).
+  function drawCharacterPanel(ctx, tpl, card) {
+    var parts = characterParts(tpl, card);
+    var vp = tpl.victoryPanel;
+    var ap = tpl.abilityPanel;
+    var usedHeight = drawBlocks(ctx, parts.victory, vp, { valign: 'top' });
+    var top = vp.y + usedHeight + (usedHeight > 0 ? ap.gap : 0);
+    var abilityBox = { x: ap.x, y: top, w: ap.w, h: Math.max(0, ap.bottom - top) };
+    drawBlocks(ctx, parts.ability, abilityBox, { valign: 'top' });
+    return abilityBox;
+  }
+ 
+  // Vision and spell cards: one panel.
   // tpl.visionTypeFont (optional) sets the font of the Hunter / Shadow / Neutre
   // words on the Vision card.
   function panelBlocks(tpl, card) {
     var c = tpl.colors;
     var blocks = [];
- 
-    if (tpl.kind === 'character') {
-      var victory = card.victoryText;
-      if (victory === undefined || victory === null) victory = tpl.defaultVictory || '';
-      if (tpl.lockVictory) victory = tpl.defaultVictory;
-      if (String(victory).trim()) {
-        blocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5 });
-        blocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24 });
-      }
-      var abilityHeading = tpl.abilityLabel + (String(card.abilityName || '').trim()
-        ? ' : ' + String(card.abilityName).trim()
-        : ' :');
-      if (String(card.abilityText || '').trim() || String(card.abilityName || '').trim()) {
-        blocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, gapBefore: 18 });
-        blocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24 });
-      }
-      return blocks;
-    }
  
     if (tpl.hasVisionTypes) {
       var chosen = (card.visionTypes || []).filter(function (t) { return T.VISION_TYPES[t]; });
@@ -350,12 +404,14 @@
     var frame = frameOf(tpl);
     var s = T.scaleOf(tpl);
     var tr = card.transform || {};
+    var badgeOnTop = !!tpl.badge && tpl.badge.onTop !== false;
  
     ctx.save();
     ctx.clearRect(0, 0, W, H);
     ctx.scale(s.sx, s.sy);
  
     if (!tpl.artOnTop) drawArtwork(ctx, tpl, art, tr);
+    if (tpl.badge && !badgeOnTop) drawBadge(ctx, tpl);
  
     if (frame) {
       ctx.drawImage(frame, 0, 0, tpl.frameW, tpl.frameH);
@@ -371,6 +427,7 @@
     if (tpl.artOnTop) drawArtwork(ctx, tpl, art, tr);
  
     drawPatch(ctx, frame, tpl.patch);
+    if (tpl.badge && badgeOnTop) drawBadge(ctx, tpl);
  
     var title = String(card.title || '').trim();
     if (title) {
@@ -415,30 +472,68 @@
       ctx.restore();
     }
  
-    drawBlocks(ctx, panelBlocks(tpl, card), tpl.panel);
+    // static labels: faction name and "PV"
+    ctx.save();
+    if (tpl.factionLabel && tpl.factionText) {
+      drawLabel(ctx, tpl.factionLabel, tpl.factionText, tpl.colors.faction || tpl.colors.badge || tpl.colors.heading);
+    }
+    if (tpl.hasHp && tpl.pvLabel) {
+      drawLabel(ctx, tpl.pvLabel, tpl.pvLabel.text, tpl.colors.pvLabel || tpl.colors.body);
+    }
+    ctx.restore();
  
-    if (global.SH_DEBUG_BOXES) drawDebug(ctx, tpl);
+    var extra = {};
+    if (tpl.kind === 'character') extra.abilityBox = drawCharacterPanel(ctx, tpl, card);
+    else drawBlocks(ctx, panelBlocks(tpl, card), tpl.panel);
+ 
+    if (global.SH_DEBUG_BOXES) drawDebug(ctx, tpl, extra);
  
     ctx.restore();
   }
  
-  function drawDebug(ctx, tpl) {
+  function drawDebug(ctx, tpl, extra) {
     ctx.save();
     ctx.lineWidth = 2;
+    // art window: magenta
     ctx.strokeStyle = '#ff00ff';
     var box = artBox(tpl);
     ctx.strokeRect(box.x, box.y, box.w, box.h);
+    // title: cyan
     ctx.strokeStyle = '#00ffff';
     ctx.strokeRect(tpl.title.x, tpl.title.y, tpl.title.w, tpl.title.h);
-    ctx.strokeStyle = '#ffff00';
-    ctx.strokeRect(tpl.panel.x, tpl.panel.y, tpl.panel.w, tpl.panel.h);
-    if (tpl.letter) {
-      ctx.strokeStyle = '#00ff00';
-      ctx.beginPath(); ctx.arc(tpl.letter.cx, tpl.letter.cy, tpl.letter.r, 0, Math.PI * 2); ctx.stroke();
+    // single panel (vision / spells): yellow
+    if (tpl.panel) {
+      ctx.strokeStyle = '#ffff00';
+      ctx.strokeRect(tpl.panel.x, tpl.panel.y, tpl.panel.w, tpl.panel.h);
     }
+    // victory box: yellow, ability zone (from its real start down to `bottom`): grey
+    if (tpl.victoryPanel) {
+      ctx.strokeStyle = '#ffff00';
+      ctx.strokeRect(tpl.victoryPanel.x, tpl.victoryPanel.y, tpl.victoryPanel.w, tpl.victoryPanel.h);
+    }
+    if (extra && extra.abilityBox) {
+      ctx.strokeStyle = '#bbbbbb';
+      ctx.strokeRect(extra.abilityBox.x, extra.abilityBox.y, extra.abilityBox.w, extra.abilityBox.h);
+    }
+    // badge / letter circle: green
+    var round = tpl.badge || tpl.letter;
+    if (round) {
+      ctx.strokeStyle = '#00ff00';
+      ctx.beginPath(); ctx.arc(round.cx, round.cy, round.r, 0, Math.PI * 2); ctx.stroke();
+    }
+    // HP circle: orange
     if (tpl.hasHp) {
       ctx.strokeStyle = '#ff8800';
       ctx.beginPath(); ctx.arc(tpl.hp.cx, tpl.hp.cy, tpl.hp.r, 0, Math.PI * 2); ctx.stroke();
+    }
+    // faction label: light blue, "PV" label: pink
+    if (tpl.factionLabel) {
+      ctx.strokeStyle = '#66ccff';
+      ctx.strokeRect(tpl.factionLabel.x, tpl.factionLabel.y, tpl.factionLabel.w, tpl.factionLabel.h);
+    }
+    if (tpl.pvLabel) {
+      ctx.strokeStyle = '#ff66cc';
+      ctx.strokeRect(tpl.pvLabel.x, tpl.pvLabel.y, tpl.pvLabel.w, tpl.pvLabel.h);
     }
     if (tpl.patch) {
       ctx.strokeStyle = '#ffffff';
@@ -478,3 +573,4 @@
     baseCoverScale: baseCoverScale
   };
 })(window);
+ 
