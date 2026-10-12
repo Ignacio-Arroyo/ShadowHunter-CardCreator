@@ -30,25 +30,25 @@
       art: { shape: 'rect', x: 95, y: 102, w: 635, h: 518 },
  
       // title: the first letter goes in the badge, the rest is drawn left-aligned in this box
-      title: { x: 222, y: 19, w: 534, h: 85, maxSize: 65, minSize: 56, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+      title: { x: 220, y: 25, w: 536, h: 85, maxSize: 65, minSize: 56, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
  
       // coloured round zone (top left). Filled with colors.badge. onTop: false = drawn behind the frame
-      badge: { cx: 123, cy: 111, r: 70, onTop: true },
+      badge: { cx: 122, cy: 116, r: 67, onTop: true },
  
       // the big letter, centred in the badge
-      letter: { cx: 123, cy: 111, r: 70, size: 112, weight: 'bold', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+      letter: { cx: 122, cy: 116, r: 67, size: 112, weight: 'bold', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
  
       // HP counter
-      hp: { cx: 732, cy: 661, r: 52, size: 65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+      hp: { cx: 740, cy: 693, r: 52, size: 65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
  
       // "SHADOW" / "HUNTER" / "NEUTRE" (text comes from factionText), left side, middle
-      factionLabel: { x: 95, y: 631, w: 300, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'left' },
+      factionLabel: { x: 95, y: 660, w: 300, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'left' },
  
       // "PV" just before the HP counter, right side, middle
-      pvLabel: { text: 'PV', x: 552, y: 631, w: 120, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'right' },
+      pvLabel: { text: 'PV', x: 552, y: 660, w: 120, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'right' },
  
       // victory conditions: top-aligned in this box (move it with x / y)
-      victoryPanel: { x: 95, y: 728, w: 635, h: 130 },
+      victoryPanel: { x: 95, y: 760, w: 635, h: 130 },
       // special ability: starts right under the victory text (+ gap) and may go down to `bottom`
       abilityPanel: { x: 95, w: 635, gap: 12, bottom: 988 },
  
