@@ -94,6 +94,7 @@
       hasVisionTypes: true,
       visionLead: 'Je pense que tu es',
       visionJoin: 'ou',
+      visionTypeFont: UNICORN,
       frameW: 873,
       frameH: 1216,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
