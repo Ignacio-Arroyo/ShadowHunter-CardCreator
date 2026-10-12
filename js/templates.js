@@ -50,7 +50,7 @@
         heading: '#C4423C', body: '#EFE3CB'
       },
       // hides the victory text baked into the artwork so we can typeset our own
-      patch: { target: { x: 104, y: 786, w: 668, h: 124 }, src: { x: 104, y: 950, w: 668, h: 60 }, feather: 26 }
+      patch: null
     }),
  
     hunter: characterBase({
@@ -78,7 +78,7 @@
         title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#E7BA5A', body: '#EFE3CB'
       },
-      patch: { target: { x: 104, y: 786, w: 668, h: 200 }, src: { x: 104, y: 1000, w: 668, h: 58 }, feather: 26 }
+      patch: null
     }),
  
     vision: {
