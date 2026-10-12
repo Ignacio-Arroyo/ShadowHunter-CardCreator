@@ -71,8 +71,8 @@
       lockVictory: true,
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
-        heading: '#C4423C', body: '#EFE3CB',
-        badge: '#C4423C', faction: '#C4423C', pvLabel: '#000000'
+        heading: '#B13044', body: '#EFE3CB',
+        badge: '#B13044', faction: '#B13044', pvLabel: '#000000'
       },
       patch: null
     }),
@@ -186,7 +186,7 @@
  
   var VISION_TYPES = {
     hunter: { label: 'HUNTER', color: '#3A6FD0' },
-    shadow: { label: 'SHADOW', color: '#C4423C' },
+    shadow: { label: 'SHADOW', color: '#B13044' },
     neutral: { label: 'NEUTRE', color: '#E7BA5A' }
   };
  
