@@ -42,10 +42,10 @@
       hp: { cx: 740, cy: 693, r: 52, size: 65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
  
       // "SHADOW" / "HUNTER" / "NEUTRE" (text comes from factionText), left side, middle
-      factionLabel: { x: 95, y: 660, w: 300, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'left' },
+      factionLabel: { x: 95, y: 660, w: 300, h: 60, size: 60, weight: 'normal', family: UNICORN, align: 'left' },
  
       // "PV" just before the HP counter, right side, middle
-      pvLabel: { text: 'PV', x: 552, y: 660, w: 120, h: 60, maxSize: 48, minSize: 24, weight: 'normal', family: UNICORN, align: 'right' },
+      pvLabel: { text: 'PV', x: 552, y: 660, w: 120, h: 60, size: 65, weight: 'normal', family: UNICORN, align: 'right' },
  
       // victory conditions: top-aligned in this box (move it with x / y)
       victoryPanel: { x: 95, y: 760, w: 635, h: 130 },
@@ -72,7 +72,7 @@
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#C4423C', body: '#EFE3CB',
-        badge: '#C4423C', faction: '#C4423C', pvLabel: '#EFE3CB'
+        badge: '#C4423C', faction: '#C4423C', pvLabel: '#000000'
       },
       patch: null
     }),
@@ -87,7 +87,7 @@
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#3A6FD0', body: '#EFE3CB',
-        badge: '#3A6FD0', faction: '#3A6FD0', pvLabel: '#EFE3CB'
+        badge: '#3A6FD0', faction: '#3A6FD0', pvLabel: '#000000'
       },
       patch: null
     }),
@@ -102,7 +102,7 @@
       colors: {
         title: '#000000', letter: '#000000', hp: '#000000',
         heading: '#E7BA5A', body: '#EFE3CB',
-        badge: '#E7BA5A', faction: '#E7BA5A', pvLabel: '#EFE3CB'
+        badge: '#E7BA5A', faction: '#E7BA5A', pvLabel: '#000000'
       },
       patch: null
     }),
