@@ -42,7 +42,7 @@
       hp: { cx: 740, cy: 693, r: 52, size: 65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
  
       // "SHADOW" / "HUNTER" / "NEUTRE" (text comes from factionText), left side, middle
-      factionLabel: { x: 95, y: 665, w: 300, h: 60, maxSize: 60, minSize:60, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 }, align: 'left' },
+      factionLabel: { x: 100, y: 665, w: 300, h: 60, maxSize: 60, minSize:60, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 }, align: 'left' },
  
       // "PV" just before the HP counter, right side, middle
       pvLabel: { text: 'PV', x: 552, y: 670, w: 120, h: 60, maxSize: 65, minSize:65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 }, align: 'right' },
@@ -97,6 +97,7 @@
       name: 'Neutral',
       swatch: 'linear-gradient(135deg,#e0a83c,#8a5a12)',
       factionText: 'NEUTRE',
+      factionLabel: { x: 100, y: 665, w: 300, h: 60, maxSize: 60, minSize:60, weight: 'normal', family: UNICORN, outline: { color: 'rgba(0,0,0,.55)', width: 3 }, align: 'left' },
       defaultVictory: '',
       lockVictory: false,
       colors: {
