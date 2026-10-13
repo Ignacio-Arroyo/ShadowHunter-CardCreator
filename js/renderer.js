@@ -236,6 +236,8 @@
   }
  
   // Draws blocks of text in a box. opts.valign: 'middle' (default) or 'top'.
+  // A block may carry `shadow`: either a colour string (same blur and offset as
+  // the title shadow) or an object { color, blur, offsetX, offsetY }.
   // Returns the height actually used (0 when there is nothing to draw).
   function drawBlocks(ctx, blocks, box, opts) {
     opts = opts || {};
@@ -257,8 +259,17 @@
  
     layout.items.forEach(function (item) {
       y += item.gapBefore;
+      ctx.save();
       ctx.font = (item.b.variant || 'normal') + ' ' + (item.b.weight || 'normal') + ' ' + item.size + 'px ' + (item.b.family || SERIF);
       ctx.fillStyle = item.b.color;
+      var sh = item.b.shadow;
+      if (sh) {
+        var o = (typeof sh === 'string') ? { color: sh, blur: 8, offsetY: 2 } : sh;
+        ctx.shadowColor = o.color;
+        ctx.shadowBlur = o.blur || 0;
+        ctx.shadowOffsetX = o.offsetX || 0;
+        ctx.shadowOffsetY = o.offsetY || 0;
+      }
       setLetterSpacing(ctx, item.b.spacing || 0);
       item.lines.forEach(function (line) {
         var baseline = y + (item.lh - item.size) / 2;
@@ -267,6 +278,7 @@
         y += item.lh;
       });
       setLetterSpacing(ctx, 0);
+      ctx.restore();
     });
     return layout.height;
   }
@@ -327,8 +339,10 @@
   }
  
   /* ---------------- panel content ---------------- */
-  // tpl.headingFont (optional) sets the font of the panel headings; when it is
-  // not defined the headings keep the default serif font.
+  // Optional template settings used here:
+  //   tpl.headingFont     font of the panel headings (default: serif)
+  //   tpl.headingShadow   shadow of the headings (colour string or { color, blur, offsetX, offsetY })
+  //   tpl.bodyShadow      shadow of the body text (same format)
  
   // Character cards: the text is split in two independent parts.
   function characterParts(tpl, card) {
@@ -339,16 +353,16 @@
     if (victory === undefined || victory === null) victory = tpl.defaultVictory || '';
     if (tpl.lockVictory) victory = tpl.defaultVictory;
     if (String(victory).trim()) {
-      victoryBlocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5 });
-      victoryBlocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24 });
+      victoryBlocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, shadow: tpl.headingShadow });
+      victoryBlocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24, shadow: tpl.bodyShadow });
     }
  
     var abilityHeading = tpl.abilityLabel + (String(card.abilityName || '').trim()
       ? ' : ' + String(card.abilityName).trim()
       : ' :');
     if (String(card.abilityText || '').trim() || String(card.abilityName || '').trim()) {
-      abilityBlocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5 });
-      abilityBlocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24 });
+      abilityBlocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, shadow: tpl.headingShadow });
+      abilityBlocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24, shadow: tpl.bodyShadow });
     }
     return { victory: victoryBlocks, ability: abilityBlocks };
   }
@@ -386,15 +400,15 @@
             weight: tpl.visionTypeFont ? 'normal' : undefined
           });
         });
-        blocks.push({ segments: segments, size: tpl.bodySize, weight: 'bold', color: c.body, lh: 1.24 });
+        blocks.push({ segments: segments, size: tpl.bodySize, weight: 'bold', color: c.body, lh: 1.24, shadow: tpl.bodyShadow });
       }
     }
  
     if (tpl.hasSpellKind) {
       var label = T.SPELL_KINDS[card.spellKind || 'immediate'];
-      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 2 });
+      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 2, shadow: tpl.headingShadow });
     }
-    blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14 });
+    blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14, shadow: tpl.bodyShadow });
     return blocks;
   }
  
