@@ -126,8 +126,8 @@
       frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 414, cy: 481, rx: 294, ry: 293 },
-      title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 85, y: 818, w: 654, h: 228 },
+      title: { x: 123, y: 40, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
+      panel: { x: 85, y: 830, w: 654, h: 228 },
       headingSize: 30,
       bodySize: 30,
       colors: { title: '#F3EBD2', heading: '#D8E8B4', body: '#F2ECD8' },
@@ -148,8 +148,8 @@
       frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 414, cy: 477, rx: 294, ry: 289 },
-      title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', family: UNICORN, shadow: null },
-      panel: { x: 85, y: 818, w: 654, h: 228 },
+      title: { x: 123, y: 40, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: null },
+      panel: { x: 85, y: 830, w: 654, h: 228 },
       headingSize: 30,
       bodySize: 30,
       colors: { title: '#2E6E9E', heading: '#2E6E9E', body: '#1B1B1B' },
@@ -170,8 +170,8 @@
       frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 414, cy: 479, rx: 292, ry: 291 },
-      title: { x: 123, y: 54, w: 576, h: 113, maxSize: 50, minSize: 22, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 85, y: 818, w: 654, h: 228 },
+      title: { x: 123, y: 40, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
+      panel: { x: 85, y: 830, w: 654, h: 228 },
       headingSize: 30,
       bodySize: 30,
       colors: { title: '#C9A227', heading: '#C9A227', body: '#EDE3CC' },
