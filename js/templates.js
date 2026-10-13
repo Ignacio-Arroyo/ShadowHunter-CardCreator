@@ -50,7 +50,7 @@
       // victory conditions: top-aligned in this box (move it with x / y)
       victoryPanel: { x: 95, y: 760, w: 635, h: 130 },
       // special ability: starts right under the victory text (+ gap) and may go down to `bottom`
-      abilityPanel: { x: 95, w: 635, gap: 12, bottom: 988 },
+      abilityPanel: { x: 95, w: 635, gap: 12, bottom: 1085 },
  
       headingSize: 34,
       bodySize: 34,
