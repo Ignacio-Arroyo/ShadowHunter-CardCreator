@@ -54,8 +54,8 @@
  
       headingSize: 34,
       bodySize: 34,
-      headingShadow: 'rgba(0,0,0,.5)',
-      bodyShadow: 'rgba(0,0,0,.5)',
+      headingShadow: 'rgba(255,255,255,.55)',
+      bodyShadow: 'rgba(255,255,255,.55)',
       victoryLabel: 'Conditions de victoire :',
       abilityLabel: 'Capacité spéciale'
     };
