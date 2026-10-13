@@ -27,7 +27,7 @@
       artOnTop: false,
  
       // illustration window
-      art: { shape: 'rect', x: 95, y: 102, w: 635, h: 518 },
+      art: { shape: 'rect', x: 94, y: 100, w: 644, h: 560 },
  
       // title: the first letter goes in the badge, the rest is drawn left-aligned in this box
       title: { x: 220, y: 25, w: 536, h: 85, maxSize: 65, minSize: 56, weight: 'normal', variant: 'small-caps', family: UNICORN, shadow: null, uppercase: true, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
@@ -54,6 +54,8 @@
  
       headingSize: 34,
       bodySize: 34,
+      headingShadow: 'rgba(0,0,0,.5)',
+      bodyShadow: 'rgba(0,0,0,.5)',
       victoryLabel: 'Conditions de victoire :',
       abilityLabel: 'Capacité spéciale'
     };
