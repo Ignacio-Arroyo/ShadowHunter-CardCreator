@@ -210,7 +210,7 @@
       if (i) x += space;
       ctx.font = tokenFont(base, tk);
       ctx.fillStyle = tk.color || fallbackColor;
-      ctx.fillText(tk.word, x, y);
+      drawOutlinedText(ctx, tk.word, x, y, base.outline);
       x += ctx.measureText(tk.word).width;
     });
     ctx.font = tokenFont(base, {});
@@ -273,8 +273,8 @@
       setLetterSpacing(ctx, item.b.spacing || 0);
       item.lines.forEach(function (line) {
         var baseline = y + (item.lh - item.size) / 2;
-        if (item.b.segments) drawTokenLine(ctx, line, cx, baseline, item.b.color, { variant: item.b.variant, weight: item.b.weight, size: item.size, family: item.b.family });
-        else ctx.fillText(line, cx, baseline);
+        if (item.b.segments) drawTokenLine(ctx, line, cx, baseline, item.b.color, { variant: item.b.variant, weight: item.b.weight, size: item.size, family: item.b.family, outline: item.b.outline });
+        else drawOutlinedText(ctx, line, cx, baseline, item.b.outline);
         y += item.lh;
       });
       setLetterSpacing(ctx, 0);
@@ -341,8 +341,8 @@
   /* ---------------- panel content ---------------- */
   // Optional template settings used here:
   //   tpl.headingFont     font of the panel headings (default: serif)
-  //   tpl.headingShadow   shadow of the headings (colour string or { color, blur, offsetX, offsetY })
-  //   tpl.bodyShadow      shadow of the body text (same format)
+  //   tpl.headingOutline  outline of the headings, e.g. { color: 'rgba(255,255,255,.55)', width: 3 }
+  //   tpl.bodyOutline     outline of the body text (same format)
  
   // Character cards: the text is split in two independent parts.
   function characterParts(tpl, card) {
@@ -353,16 +353,16 @@
     if (victory === undefined || victory === null) victory = tpl.defaultVictory || '';
     if (tpl.lockVictory) victory = tpl.defaultVictory;
     if (String(victory).trim()) {
-      victoryBlocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, shadow: tpl.headingShadow });
-      victoryBlocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24, shadow: tpl.bodyShadow });
+      victoryBlocks.push({ text: tpl.victoryLabel, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, outline: tpl.headingOutline });
+      victoryBlocks.push({ text: victory, size: tpl.bodySize, color: c.body, lh: 1.24, outline: tpl.bodyOutline });
     }
  
     var abilityHeading = tpl.abilityLabel + (String(card.abilityName || '').trim()
       ? ' : ' + String(card.abilityName).trim()
       : ' :');
     if (String(card.abilityText || '').trim() || String(card.abilityName || '').trim()) {
-      abilityBlocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, shadow: tpl.headingShadow });
-      abilityBlocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24, shadow: tpl.bodyShadow });
+      abilityBlocks.push({ text: abilityHeading, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 1.5, outline: tpl.headingOutline });
+      abilityBlocks.push({ text: card.abilityText || '', size: tpl.bodySize, color: c.body, lh: 1.24, outline: tpl.bodyOutline });
     }
     return { victory: victoryBlocks, ability: abilityBlocks };
   }
@@ -400,15 +400,15 @@
             weight: tpl.visionTypeFont ? 'normal' : undefined
           });
         });
-        blocks.push({ segments: segments, size: tpl.bodySize, weight: 'bold', color: c.body, lh: 1.24, shadow: tpl.bodyShadow });
+        blocks.push({ segments: segments, size: tpl.bodySize, weight: 'bold', color: c.body, lh: 1.24, outline: tpl.bodyOutline });
       }
     }
  
     if (tpl.hasSpellKind) {
       var label = T.SPELL_KINDS[card.spellKind || 'immediate'];
-      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 2, shadow: tpl.headingShadow });
+      blocks.push({ text: label, size: tpl.headingSize, weight: 'bold', variant: 'small-caps', family: tpl.headingFont, color: c.heading, spacing: 2, outline: tpl.headingOutline });
     }
-    blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14, shadow: tpl.bodyShadow });
+    blocks.push({ text: card.text || '', size: tpl.bodySize, color: c.body, lh: 1.26, gapBefore: 14, outline: tpl.bodyOutline });
     return blocks;
   }
  
@@ -587,4 +587,3 @@
     baseCoverScale: baseCoverScale
   };
 })(window);
- 
