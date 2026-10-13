@@ -147,7 +147,7 @@
       frameW: 825,
       frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
-      art: { shape: 'ellipse', cx: 414, cy: 477, rx: 294, ry: 289 },
+      art: { shape: 'ellipse', cx: 413, cy: 476, rx: 293, ry: 288 },
       title: { x: 123, y: 30, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: null },
       panel: { x: 85, y: 840, w: 654, h: 228 },
       headingSize: 32,
@@ -169,7 +169,7 @@
       frameW: 825,
       frameH: 1155,
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
-      art: { shape: 'ellipse', cx: 414, cy: 479, rx: 292, ry: 291 },
+      art: { shape: 'ellipse', cx: 413, cy: 478, rx: 291, ry: 290 },
       title: { x: 123, y: 30, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
       panel: { x: 85, y: 840, w: 654, h: 228 },
       headingSize: 32,
