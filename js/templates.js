@@ -52,8 +52,8 @@
       // special ability: starts right under the victory text (+ gap) and may go down to `bottom`
       abilityPanel: { x: 75, w: 675, gap: 12, bottom: 1085 },
  
-      headingSize: 34,
-      bodySize: 34,
+      headingSize: 32,
+      bodySize: 32,
       victoryLabel: 'Conditions de victoire :',
       abilityLabel: 'Capacité spéciale'
     };
