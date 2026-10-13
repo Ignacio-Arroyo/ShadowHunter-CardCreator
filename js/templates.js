@@ -185,7 +185,7 @@
   };
  
   var VISION_TYPES = {
-    hunter: { label: 'HUNTER', color: '#1A53AA' },
+    hunter: { label: 'HUNTER', color: '#5B8DDE' },
     shadow: { label: 'SHADOW', color: '#B13044' },
     neutral: { label: 'NEUTRE', color: '#D4A13C' }
   };
