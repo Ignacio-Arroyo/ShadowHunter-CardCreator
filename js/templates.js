@@ -48,9 +48,9 @@
       pvLabel: { text: 'PV', x: 552, y: 670, w: 120, h: 60, maxSize: 65, minSize:65, weight: 'normal', family: UNICORN, outline: { color: 'rgba(255,255,255,.55)', width: 3 }, align: 'right' },
  
       // victory conditions: top-aligned in this box (move it with x / y)
-      victoryPanel: { x: 95, y: 760, w: 635, h: 130 },
+      victoryPanel: { x: 75, y: 760, w: 675, h: 130 },
       // special ability: starts right under the victory text (+ gap) and may go down to `bottom`
-      abilityPanel: { x: 95, w: 635, gap: 12, bottom: 1085 },
+      abilityPanel: { x: 75, w: 675, gap: 12, bottom: 1085 },
  
       headingSize: 34,
       bodySize: 34,
