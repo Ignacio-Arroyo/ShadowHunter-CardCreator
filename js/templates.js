@@ -127,7 +127,7 @@
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 414, cy: 481, rx: 294, ry: 293 },
       title: { x: 123, y: 30, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 85, y: 860, w: 654, h: 228 },
+      panel: { x: 85, y: 865, w: 654, h: 228 },
       panelValign: 'top',
       panelFixedSize: true,
       headingSize: 32,
@@ -151,7 +151,7 @@
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 414, cy: 477, rx: 288, ry: 285 },
       title: { x: 123, y: 30, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: null },
-      panel: { x: 85, y: 860, w: 654, h: 228 },
+      panel: { x: 85, y: 865, w: 654, h: 228 },
       panelValign: 'top',
       panelFixedSize: true,
       headingSize: 32,
@@ -175,7 +175,7 @@
       artOnTop: true, // this frame has no transparent window: art is masked onto the disc
       art: { shape: 'ellipse', cx: 412, cy: 479, rx: 288, ry: 285 },
       title: { x: 123, y: 30, w: 576, h: 113, maxSize: 40, minSize: 32, weight: 'normal', family: UNICORN, shadow: 'rgba(0,0,0,.5)' },
-      panel: { x: 85, y: 860, w: 654, h: 228 },
+      panel: { x: 85, y: 865, w: 654, h: 228 },
       panelValign: 'top',
       panelFixedSize: true,
       headingSize: 32,
