@@ -236,6 +236,7 @@
   }
  
   // Draws blocks of text in a box. opts.valign: 'middle' (default) or 'top'.
+  // opts.fixedSize: true = never shrink the text to fit the box height.
   // A block may carry `shadow`: either a colour string (same blur and offset as
   // the title shadow) or an object { color, blur, offsetX, offsetY }.
   // Returns the height actually used (0 when there is nothing to draw).
@@ -247,7 +248,8 @@
     if (!blocks.length) return 0;
  
     var layout = null;
-    for (var scale = 1; scale >= 0.5; scale -= 0.04) {
+    var minScale = opts.fixedSize ? 1 : 0.5;
+    for (var scale = 1; scale >= minScale; scale -= 0.04) {
       layout = measureBlocks(ctx, blocks, box.w, scale);
       if (layout.height <= box.h) break;
     }
@@ -498,7 +500,7 @@
  
     var extra = {};
     if (tpl.kind === 'character') extra.abilityBox = drawCharacterPanel(ctx, tpl, card);
-    else drawBlocks(ctx, panelBlocks(tpl, card), tpl.panel);
+    else drawBlocks(ctx, panelBlocks(tpl, card), tpl.panel, { valign: tpl.panelValign || 'middle', fixedSize: !!tpl.panelFixedSize });
  
     if (global.SH_DEBUG_BOXES) drawDebug(ctx, tpl, extra);
  
