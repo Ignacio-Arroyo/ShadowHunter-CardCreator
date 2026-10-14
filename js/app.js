@@ -1,20 +1,20 @@
 /* UI wiring: template picker, live preview, art transform, collection, PDF. */
 (function () {
   'use strict';
-
+ 
   var T = window.SHTemplates;
   var R = window.SHRenderer;
   var Store = window.SHStore;
-
+ 
   var $ = function (id) { return document.getElementById(id); };
-
+ 
   var preview = $('preview');
   var pctx = preview.getContext('2d');
-
+ 
   var current = newCard('shadow');
   var currentImg = null;
   var editingId = null;
-
+ 
   function newCard(type) {
     var tpl = T.get(type);
     return {
@@ -32,7 +32,7 @@
       transform: { x: 0, y: 0, scale: 1, rotation: 0 }
     };
   }
-
+ 
   /* ---------------- template picker ---------------- */
   function buildTemplatePicker() {
     var wrap = $('templatePicker');
@@ -56,7 +56,7 @@
       wrap.appendChild(btn);
     });
   }
-
+ 
   // keeps the fixed Shadow/Hunter victory wording in sync when the template changes
   function applyTemplateDefaults() {
     var tpl = T.get(current.type);
@@ -64,11 +64,11 @@
       current.victoryText = tpl.defaultVictory || '';
     }
   }
-
+ 
   function syncFields() {
     var tpl = T.get(current.type);
     var isCharacter = tpl.kind === 'character';
-
+ 
     $('fieldHp').classList.toggle('hidden', !tpl.hasHp);
     $('fieldVictory').classList.toggle('hidden', !tpl.hasVictory);
     $('fieldAbilityName').classList.toggle('hidden', !tpl.hasAbility);
@@ -76,13 +76,13 @@
     $('fieldSpellKind').classList.toggle('hidden', !tpl.hasSpellKind);
     $('fieldVisionTypes').classList.toggle('hidden', !tpl.hasVisionTypes);
     $('fieldText').classList.toggle('hidden', isCharacter);
-
+ 
     var locked = isCharacter && tpl.lockVictory;
     $('fVictory').readOnly = locked;
     $('fVictory').value = current.victoryText || '';
     $('victoryLocked').classList.toggle('hidden', !locked);
   }
-
+ 
   /* ---------------- drawing ---------------- */
   var drawPending = false;
   function draw() {
@@ -93,7 +93,7 @@
       R.renderCard(pctx, current, currentImg);
     });
   }
-
+ 
   /* ---------------- form bindings ---------------- */
   function bindInput(el, key, transform) {
     el.addEventListener('input', function () {
@@ -101,7 +101,7 @@
       draw();
     });
   }
-
+ 
   bindInput($('fTitle'), 'title');
   bindInput($('fText'), 'text');
   bindInput($('fVictory'), 'victoryText');
@@ -109,18 +109,18 @@
   bindInput($('fAbilityText'), 'abilityText');
   bindInput($('fSpellKind'), 'spellKind');
   bindInput($('fHp'), 'hp', function (v) { return v === '' ? '' : Math.max(0, Math.min(99, Number(v))); });
-
+ 
   function readVisionTypes() {
     return [$('fVisionType1').value, $('fVisionType2').value].filter(Boolean);
   }
-
+ 
   [$('fVisionType1'), $('fVisionType2')].forEach(function (el) {
     el.addEventListener('change', function () {
       current.visionTypes = readVisionTypes();
       draw();
     });
   });
-
+ 
   $('fScale').addEventListener('input', function () {
     current.transform.scale = Number(this.value) / 100;
     $('outScale').textContent = this.value + '%';
@@ -131,17 +131,17 @@
     $('outRot').textContent = this.value + '\u00B0';
     draw();
   });
-
+ 
   function setSliders() {
     $('fScale').value = Math.round(current.transform.scale * 100);
     $('outScale').textContent = Math.round(current.transform.scale * 100) + '%';
     $('fRot').value = current.transform.rotation;
     $('outRot').textContent = current.transform.rotation + '\u00B0';
   }
-
-  /* ---------------- image upload (downscaled to keep localStorage happy) ---------------- */
+ 
+  /* ---------------- image upload (downscaled to keep saved cards light) ---------------- */
   var MAX_DIM = 1400;
-
+ 
   function fileToDataUrl(file) {
     return new Promise(function (resolve, reject) {
       var fr = new FileReader();
@@ -150,7 +150,7 @@
       fr.readAsDataURL(file);
     });
   }
-
+ 
   function downscale(dataUrl) {
     return R.loadImage(dataUrl).then(function (img) {
       var w = img.naturalWidth, h = img.naturalHeight;
@@ -163,7 +163,7 @@
       return cv.toDataURL('image/jpeg', 0.88);
     });
   }
-
+ 
   $('fImage').addEventListener('change', function () {
     var file = this.files && this.files[0];
     if (!file) return;
@@ -180,7 +180,7 @@
       .catch(function (err) { alert(err.message); });
     this.value = '';
   });
-
+ 
   $('btnClearImage').addEventListener('click', function () {
     current.image = null;
     currentImg = null;
@@ -188,12 +188,12 @@
     setSliders();
     draw();
   });
-
+ 
   $('btnFitCover').addEventListener('click', function () {
     current.transform = { x: 0, y: 0, scale: 1, rotation: current.transform.rotation };
     setSliders(); draw();
   });
-
+ 
   $('btnFitContain').addEventListener('click', function () {
     if (!currentImg) return;
     var tpl = T.get(current.type);
@@ -205,15 +205,15 @@
     current.transform.scale = contain / cover;
     setSliders(); draw();
   });
-
+ 
   $('btnResetArt').addEventListener('click', function () {
     current.transform = { x: 0, y: 0, scale: 1, rotation: 0 };
     setSliders(); draw();
   });
-
+ 
   /* ---------------- drag & wheel on the preview ---------------- */
   var dragging = false, lastX = 0, lastY = 0;
-
+ 
   // pointer position expressed in the current frame's native pixel space
   function toCardSpace(evt) {
     var rect = preview.getBoundingClientRect();
@@ -223,7 +223,7 @@
       y: ((evt.clientY - rect.top) / rect.height) * tpl.frameH
     };
   }
-
+ 
   preview.addEventListener('pointerdown', function (e) {
     if (!current.image) return;
     dragging = true;
@@ -232,7 +232,7 @@
     var p = toCardSpace(e);
     lastX = p.x; lastY = p.y;
   });
-
+ 
   preview.addEventListener('pointermove', function (e) {
     if (!dragging) return;
     var p = toCardSpace(e);
@@ -241,14 +241,14 @@
     lastX = p.x; lastY = p.y;
     draw();
   });
-
+ 
   ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
     preview.addEventListener(ev, function () {
       dragging = false;
       preview.classList.remove('grabbing');
     });
   });
-
+ 
   preview.addEventListener('wheel', function (e) {
     if (!current.image) return;
     e.preventDefault();
@@ -257,7 +257,7 @@
     setSliders();
     draw();
   }, { passive: false });
-
+ 
   /* ---------------- save / load / new ---------------- */
   function loadIntoForm(card) {
     current = JSON.parse(JSON.stringify(card));
@@ -282,7 +282,7 @@
       draw();
     }
   }
-
+ 
   function updateEditingNote() {
     var note = $('editingNote');
     if (editingId) {
@@ -293,7 +293,7 @@
     }
     $('btnSave').textContent = editingId ? 'Update card' : 'Save card';
   }
-
+ 
   $('btnSave').addEventListener('click', function () {
     if (!current.title.trim()) {
       if (!confirm('This card has no title. Save anyway?')) return;
@@ -302,21 +302,21 @@
     current.id = editingId || Store.uid();
     var saved = Store.save(current);
     if (!saved) return;
-
+ 
     var type = current.type;
     editingId = null;
     loadIntoForm(newCard(type)); // next save creates another card instead of overwriting
     refreshCollection();
     flash($('btnSave'), updating ? 'Updated!' : 'Added!');
   });
-
+ 
   $('btnNew').addEventListener('click', function () {
     var type = current.type;
     loadIntoForm(newCard(type));
     editingId = null;
     updateEditingNote();
   });
-
+ 
   $('btnPng').addEventListener('click', function () {
     R.renderToCanvas(current, T.CARD_W).then(function (canvas) {
       var a = document.createElement('a');
@@ -325,19 +325,19 @@
       a.click();
     });
   });
-
+ 
   function flash(btn, msg) {
     btn.textContent = msg;
     btn.disabled = true;
     setTimeout(function () { btn.disabled = false; updateEditingNote(); }, 900);
   }
-
+ 
   /* ---------------- collection ---------------- */
   function refreshCollection() {
     var list = Store.all();
     $('countBadge').textContent = list.length;
     $('emptyMsg').classList.toggle('hidden', list.length > 0);
-
+ 
     var gallery = $('gallery');
     gallery.innerHTML = '';
     list.forEach(function (card) {
@@ -345,7 +345,7 @@
       tile.className = 'card-tile';
       var holder = document.createElement('div');
       tile.appendChild(holder);
-
+ 
       var name = document.createElement('div');
       name.className = 'name';
       name.textContent = card.title || '(untitled)';
@@ -354,7 +354,7 @@
       type.textContent = T.get(card.type).name + (card.hp !== '' && card.hp !== undefined ? ' · ' + card.hp + ' PV' : '');
       tile.appendChild(name);
       tile.appendChild(type);
-
+ 
       var actions = document.createElement('div');
       actions.className = 'tile-actions';
       actions.appendChild(makeBtn('Edit', function () {
@@ -377,14 +377,14 @@
       del.className = 'danger';
       actions.appendChild(del);
       tile.appendChild(actions);
-
+ 
       gallery.appendChild(tile);
       R.renderToCanvas(card, 300).then(function (cv) { holder.appendChild(cv); });
     });
-
+ 
     buildPrintList(list);
   }
-
+ 
   function makeBtn(label, fn) {
     var b = document.createElement('button');
     b.type = 'button';
@@ -393,13 +393,13 @@
     b.addEventListener('click', fn);
     return b;
   }
-
+ 
   $('btnClearAll').addEventListener('click', function () {
     if (!confirm('Delete ALL saved cards? This cannot be undone.')) return;
     Store.clear();
     refreshCollection();
   });
-
+ 
   $('btnExportJson').addEventListener('click', function () {
     var blob = new Blob([JSON.stringify(Store.all(), null, 2)], { type: 'application/json' });
     var a = document.createElement('a');
@@ -408,7 +408,7 @@
     a.click();
     setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
   });
-
+ 
   $('fImport').addEventListener('change', function () {
     var file = this.files && this.files[0];
     if (!file) return;
@@ -427,31 +427,31 @@
     });
     this.value = '';
   });
-
+ 
   /* ---------------- print list ---------------- */
   var printState = {}; // id -> {selected, copies}
-
+ 
   function buildPrintList(list) {
     var wrap = $('printList');
     wrap.innerHTML = '';
     list.forEach(function (card) {
       if (!printState[card.id]) printState[card.id] = { selected: true, copies: 1 };
       var st = printState[card.id];
-
+ 
       var row = document.createElement('div');
       row.className = 'print-row';
-
+ 
       var chk = document.createElement('input');
       chk.type = 'checkbox';
       chk.checked = st.selected;
       chk.addEventListener('change', function () { st.selected = chk.checked; updateSummary(); });
-
+ 
       var thumbHolder = document.createElement('span');
-
+ 
       var name = document.createElement('span');
       name.className = 'rname';
       name.textContent = (card.title || '(untitled)') + ' — ' + T.get(card.type).name;
-
+ 
       var copies = document.createElement('input');
       copies.type = 'number';
       copies.min = 1;
@@ -462,29 +462,29 @@
         st.copies = Math.max(1, Math.min(99, Number(copies.value) || 1));
         updateSummary();
       });
-
+ 
       row.appendChild(chk);
       row.appendChild(thumbHolder);
       row.appendChild(name);
       row.appendChild(copies);
       wrap.appendChild(row);
-
+ 
       R.renderToCanvas(card, 80).then(function (cv) { thumbHolder.appendChild(cv); });
     });
     updateSummary();
   }
-
+ 
   function selectedEntries() {
     return Store.all()
       .filter(function (c) { return printState[c.id] && printState[c.id].selected; })
       .map(function (c) { return { card: c, copies: printState[c.id].copies }; });
   }
-
+ 
   function cardMm() {
     var parts = $('pSize').value.split('x');
     return { w: Number(parts[0]), h: Number(parts[1]) };
   }
-
+ 
   function updateSummary() {
     var entries = selectedEntries();
     var total = entries.reduce(function (n, e) { return n + e.copies; }, 0);
@@ -497,11 +497,11 @@
     $('printSummary').textContent = total + ' card' + (total === 1 ? '' : 's') + ' → ' +
       Math.max(1, Math.ceil(total / perPage)) + ' page(s) at ' + cols + '×' + rows + ' per sheet';
   }
-
+ 
   ['pPage', 'pSize', 'pGap'].forEach(function (id) {
     $(id).addEventListener('input', updateSummary);
   });
-
+ 
   $('btnSelAll').addEventListener('click', function () {
     Object.keys(printState).forEach(function (k) { printState[k].selected = true; });
     buildPrintList(Store.all());
@@ -510,7 +510,7 @@
     Object.keys(printState).forEach(function (k) { printState[k].selected = false; });
     buildPrintList(Store.all());
   });
-
+ 
   $('btnPdf').addEventListener('click', function () {
     var entries = selectedEntries();
     if (!entries.length) { alert('Select at least one card.'); return; }
@@ -518,7 +518,7 @@
     var btn = this;
     btn.disabled = true;
     var status = $('pdfStatus');
-
+ 
     window.SHPdf.generate(entries, {
       page: $('pPage').value,
       cardW: size.w,
@@ -538,7 +538,7 @@
       btn.disabled = false;
     });
   });
-
+ 
   /* ---------------- tabs ---------------- */
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(function (t) {
@@ -549,20 +549,22 @@
     });
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
-
+ 
   document.querySelectorAll('.tab').forEach(function (t) {
     t.addEventListener('click', function () { switchTab(t.dataset.tab); });
   });
-
+ 
   /* ---------------- init ---------------- */
   buildTemplatePicker();
   applyTemplateDefaults();
   syncFields();
   setSliders();
-  R.preloadFrames().then(function () {
+  draw();
+ 
+  // the collection is loaded asynchronously (IndexedDB): wait for it, and for the frames
+  var framesReady = R.preloadFrames().catch(function () {});
+  Promise.all([framesReady, Store.ready || Promise.resolve()]).then(function () {
     draw();
     refreshCollection();
   });
-  refreshCollection();
-  draw();
 })();
