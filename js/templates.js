@@ -30,7 +30,7 @@
       art: { shape: 'rect', x: 94, y: 100, w: 644, h: 560 },
  
       // title: the first letter goes in the badge, the rest is drawn left-aligned in this box
-      title: { x: 220, y: 30, w: 536, h: 85, maxSize: 65, minSize: 56, weight: 'normal', family: UNICORN, shadow: null, uppercase: true, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
+      title: { x: 220, y: 30, w: 536, h: 85, maxSize: 70, minSize: 56, weight: 'normal', family: UNICORN, shadow: null, uppercase: true, outline: { color: 'rgba(255,255,255,.55)', width: 3 } },
  
       // coloured round zone (top left). Filled with colors.badge. onTop: false = drawn behind the frame
       badge: { cx: 122, cy: 116, r: 67, onTop: true },
